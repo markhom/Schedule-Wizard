@@ -6,7 +6,11 @@
   "scripts": {
     "start": "node server.js",
     "watch": "nodemon",
-    "seed": "node seeders/seed.js"
+    "seed": "node seeders/seed.js",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+
   },
   "keywords": [],
   "author": "",

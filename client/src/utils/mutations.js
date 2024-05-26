@@ -24,33 +24,43 @@ export const ADD_USER = gql`
   }
 `;
 
-export const ADD_THOUGHT = gql`
-  mutation addThought($thoughtText: String!) {
-    addThought(thoughtText: $thoughtText) {
+// Mutation to add a new schedule
+export const ADD_SCHEDULE = gql`
+  mutation AddSchedule($title: String!, $owner: ID!) {
+    addSchedule(title: $title, owner: $owner) {
       _id
-      thoughtText
-      thoughtAuthor
-      createdAt
-      comments {
+      title
+      owner {
         _id
-        commentText
+        username
+      }
+      activities {
+        _id
+        title
       }
     }
   }
 `;
 
-export const ADD_COMMENT = gql`
-  mutation addComment($thoughtId: ID!, $commentText: String!) {
-    addComment(thoughtId: $thoughtId, commentText: $commentText) {
+// Mutation to update an existing schedule
+export const UPDATE_SCHEDULE = gql`
+  mutation UpdateSchedule($scheduleId: ID!, $title: String!) {
+    updateSchedule(scheduleId: $scheduleId, title: $title) {
       _id
-      thoughtText
-      thoughtAuthor
-      createdAt
-      comments {
+      title
+      activities {
         _id
-        commentText
-        createdAt
+        title
       }
+    }
+  }
+`;
+
+// Mutation to delete a schedule
+export const DELETE_SCHEDULE = gql`
+  mutation DeleteSchedule($scheduleId: ID!) {
+    deleteSchedule(scheduleId: $scheduleId) {
+      _id
     }
   }
 `;
