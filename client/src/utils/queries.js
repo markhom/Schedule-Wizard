@@ -1,59 +1,32 @@
 import { gql } from '@apollo/client';
 
-export const QUERY_USER = gql`
-  query user($username: String!) {
-    user(username: $username) {
-      _id
+// Import gql from Apollo Client
+import { gql } from '@apollo/client';
+
+// Query to fetch user data
+export const GET_USER = gql`
+  query GetUser($userId: ID!) {
+    user(id: $userId) {
+      id
       username
       email
-      thoughts {
-        _id
-        thoughtText
-        createdAt
+      schedules {
+        id
+        title
       }
     }
   }
 `;
 
-export const QUERY_THOUGHTS = gql`
-  query getThoughts {
-    thoughts {
-      _id
-      thoughtText
-      thoughtAuthor
-      createdAt
-    }
-  }
-`;
-
-export const QUERY_SINGLE_THOUGHT = gql`
-  query getSingleThought($thoughtId: ID!) {
-    thought(thoughtId: $thoughtId) {
-      _id
-      thoughtText
-      thoughtAuthor
-      createdAt
-      comments {
-        _id
-        commentText
-        commentAuthor
-        createdAt
-      }
-    }
-  }
-`;
-
-export const QUERY_ME = gql`
-  query me {
-    me {
-      _id
-      username
-      email
-      thoughts {
-        _id
-        thoughtText
-        thoughtAuthor
-        createdAt
+// Query to fetch schedules
+export const GET_SCHEDULES = gql`
+  query GetSchedules {
+    schedules {
+      id
+      title
+      owner {
+        id
+        username
       }
     }
   }
