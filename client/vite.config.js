@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   esbuild: {
     loader: 'jsx',
-    include: /src\/.*\.jsx?$/, 
+    include: /src\/.*\.jsx$/, 
     exclude: /node_modules/
   },
   server: {
