@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Form, Button, Alert } from 'react-bootstrap';
+
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../utils/mutations';
 
@@ -10,7 +12,7 @@ const Login = (props) => {
   const [login, { error, data }] = useMutation(LOGIN_USER);
 
   // update state based on form input changes
-  const handleChange = (event) => {
+  const handleInputChange = (event) => {
     const { name, value } = event.target;
 
     setFormState({
@@ -22,7 +24,8 @@ const Login = (props) => {
   // submit form
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    console.log(formState);
+    //console.log(formState);
+    
     try {
       const { data } = await login({
         variables: { ...formState },
@@ -59,7 +62,7 @@ const Login = (props) => {
                   name="email"
                   type="email"
                   value={formState.email}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                 />
                 <input
                   className="form-input"
@@ -67,7 +70,7 @@ const Login = (props) => {
                   name="password"
                   type="password"
                   value={formState.password}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                 />
                 <button
                   className="btn btn-block btn-primary"
