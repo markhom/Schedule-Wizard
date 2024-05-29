@@ -2,39 +2,57 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 function Profile() {
-    const { username } = useParams(); // Using URL parameter to fetch profile details
+    // Extract the 'username' parameter from the URL
+    const { username } = useParams(); 
+
+    // State variables to manage user data, loading status, and any errors
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Simulated fetch function
+    // Function to fetch user data from an API
     const fetchUserData = async (username) => {
         try {
-            // Placeholder
-            const data = { name: "John Doe", email: "johndoe@example.com" }; // Mock data
+            // Make an API request to fetch user data
+            const response = await fetch(`api/user/${username}`);
+            
+            // Check if the response is successful
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            // Parse the JSON data from the response
+            const data = await response.json();
+
+            // Update the state with the fetched user data and set loading to false
             setUser(data);
             setLoading(false);
         } catch (err) {
+            // Handle any errors by logging them and updating the error state
             console.error("Failed to fetch user data:", err);
             setError('Failed to fetch data');
             setLoading(false);
         }
     };
 
+    // useEffect hook to fetch user data when the component mounts or when 'username' changes
     useEffect(() => {
         fetchUserData(username);
     }, [username]);
 
+    // Conditional rendering based on loading, error, and user data states
     if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (error) return <div>Error: {error}</div>; 
 
+    // Render the user's profile information
     return (
         <div>
-            <h1>Profile: {user.name}</h1>
             <p>Email: {user.email}</p>
+            <p>Username: {user.username}</p>
             {/* More user details can be added here */}
         </div>
     );
 }
 
 export default Profile;
+
