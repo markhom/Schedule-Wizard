@@ -12,6 +12,8 @@ import {useState, useEffect} from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
+import Profile from './pages/Profile';
+import Home from './pages/Home';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
