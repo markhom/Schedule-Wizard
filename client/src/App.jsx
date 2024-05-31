@@ -6,15 +6,16 @@ import {
   createHttpLink,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-
+import { Outlet } from 'react-router-dom';
+import {useState, useEffect} from 'react';
+ 
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
-import Profile from './components/Profile'; // Import the Profile component
-import Home from './components/Home'; // Ensure you have a Home component for the root path
+import Profile from './pages/Profile';
+import Home from './pages/Home';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
@@ -50,19 +51,14 @@ function App() {
 
   return (
     <ApolloProvider client={client}>
-      <Router>
-        <div className="flex-column justify-flex-start min-100-vh">
-          <Header />
-          <Navbar isAuthenticated={isAuthenticated} /> {/* Pass the authentication status */}
-          <div className="container">
-            <Routes>
-              <Route path="/" element={<Home />} /> {/* Home route */}
-              <Route path="/profile/:username" element={<Profile />} /> {/* Profile route */}
-            </Routes>
-          </div>
-          <Footer />
+      <div className="flex-column justify-flex-start min-100-vh">
+        <Header />
+        <Navbar isAuthenticated={isAuthenticated} /> {/* Pass the authentication status */}
+        <div className="container">
+          <Outlet />
         </div>
-      </Router>
+        <Footer />
+      </div>
     </ApolloProvider>
   );
 }
