@@ -1,5 +1,12 @@
-// Defines the initial empty schedule for 24 hours
-export const initialSchedule = Array.from({ length: 24 }, (_, index) => ({
-    hour: index,  // 0 represents 12 AM, 23 represents 11 PM
-    activity: "",
-}));
+// Example initial data structure
+const initialSchedules = [
+    {
+        id: 'schedule1',
+        title: 'My Work Schedule',
+        blocks: Array(12).fill().map((_, i) => ({
+            startHour: i + 1,
+            endHour: i + 2,
+            activity: 'Free'
+        }))
+    }
+];

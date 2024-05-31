@@ -1,9 +1,10 @@
-const { User, Schedule, Activity } = require('../models'); 
+const { User, Schedule, Activity } = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const resolvers = {
   Query: {
+    // Existing query resolvers
     users: async () => {
       return await User.find({});
     },
@@ -18,6 +19,7 @@ const resolvers = {
     }
   },
   Mutation: {
+    // Existing mutation resolvers
     addUser: async (_, { username, email, password }) => {
       const hashedPassword = await bcrypt.hash(password, 10);
       const newUser = new User({ username, email, password: hashedPassword });
@@ -60,13 +62,23 @@ const resolvers = {
       const newSchedule = new Schedule({ title, owner });
       return await newSchedule.save();
     },
+    updateSchedule: async (_, { id, title }) => {
+      return await Schedule.findByIdAndUpdate(id, { title }, { new: true });
+    },
+    deleteSchedule: async (_, { id }) => {
+      return await Schedule.findByIdAndDelete(id);
+    },
     addActivity: async (_, { title, startTime, endTime, description, scheduleId }) => {
       const newActivity = new Activity({ title, startTime, endTime, description });
       await newActivity.save();
-      
-
       await Schedule.findByIdAndUpdate(scheduleId, { $push: { activities: newActivity._id } });
       return newActivity;
+    },
+    updateActivity: async (_, { id, title, description, startTime, endTime }) => {
+      return await Activity.findByIdAndUpdate(id, { title, description, startTime, endTime }, { new: true });
+    },
+    deleteActivity: async (_, { id }) => {
+      return await Activity.findByIdAndDelete(id);
     }
   }
 };
