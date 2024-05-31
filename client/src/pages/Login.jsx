@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import { Form, Button, Alert } from 'react-bootstrap';
 
 import { useMutation } from '@apollo/client';
@@ -7,90 +7,73 @@ import { LOGIN_USER } from '../utils/mutations';
 
 import Auth from '../utils/auth';
 
-const Login = (props) => {
-  const [formState, setFormState] = useState({ email: '', password: '' });
+const Login = () => {
+  const [userFormData, setUserFormData] = useState({ email: '', password: '' });
+  const [validated] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+
   const [login, { error, data }] = useMutation(LOGIN_USER);
 
   // update state based on form input changes
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-
-    setFormState({
-      ...formState,
-      [name]: value,
-    });
+    setUserFormData({ ...userFormData, [name]: value });
   };
 
   // submit form
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     //console.log(formState);
-    
+
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
     try {
       const { data } = await login({
-        variables: { ...formState },
-      });
+        variables: { ...userFormData },
+      })
 
       Auth.login(data.login.token);
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
+      setShowAlert(true);
     }
 
     // clear form values
-    setFormState({
+    setUserFormData({
       email: '',
       password: '',
     });
   };
 
   return (
-    <main className="flex-row justify-center mb-4">
-      <div className="col-12 col-lg-10">
-        <div className="card">
-          <h4 className="card-header bg-dark text-light p-2">Login</h4>
-          <div className="card-body">
-            {data ? (
-              <p>
-                Success! You may now head{' '}
-                <Link to="/">back to the homepage.</Link>
-              </p>
-            ) : (
-              <form onSubmit={handleFormSubmit}>
-                <input
-                  className="form-input"
-                  placeholder="Your email"
-                  name="email"
-                  type="email"
-                  value={formState.email}
-                  onChange={handleInputChange}
-                />
-                <input
-                  className="form-input"
-                  placeholder="******"
-                  name="password"
-                  type="password"
-                  value={formState.password}
-                  onChange={handleInputChange}
-                />
-                <button
-                  className="btn btn-block btn-primary"
-                  style={{ cursor: 'pointer' }}
-                  type="submit"
-                >
-                  Submit
-                </button>
-              </form>
-            )}
+    <>
+      <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
+        <Alert dismissible onClose={() => setShowAlert(false)} show={showAlert} variant='warning'>
+          Something went wrong with your login!
+        </Alert>
 
-            {error && (
-              <div className="my-3 p-3 bg-danger text-white">
-                {error.message}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </main>
+        <Form.Group className='mb-3' controlId="exampleForm.ControlInput1">
+          <Form.Label htmlFor='email'>Email</Form.Label>
+          <Form.Control type='text' placeholder='Your email' name='email' onChange={handleInputChange} value={userFormData.email} required/>
+          <Form.Control.Feedback type='invalid'>An email is required!</Form.Control.Feedback>
+        </Form.Group>
+
+        <Form.Group className='mb-3' controlId="exampleForm.ControlInput2">
+          <Form.Label htmlFor='password'>Password</Form.Label>
+          <Form.Control type='password' placeholder='Your password' name='password' onChange={handleInputChange} value={userFormData.password} required/>
+          <Form.Control.Feedback type='invalid'>A password is required!</Form.Control.Feedback>
+        </Form.Group>
+
+        <Button
+          disabled={!(userFormData.email && userFormData.password)} type='submit' variant='info'>
+          Submit
+        </Button>
+      </Form>
+    </>
   );
 };
 
