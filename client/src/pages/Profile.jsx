@@ -48,6 +48,14 @@ function Profile() {
     
         const user = data.user;  // Extract user data from query result
 
-
+        return (
+            <Container>
+                {/* User Profile Information */}
+                <Row>
+                    <Col>
+                        <p>Email: {user.email}</p>
+                        <p>Username: {user.username}</p>
+                    </Col>
+                </Row>
 export default Profile;
 
