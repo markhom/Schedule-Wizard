@@ -97,5 +97,38 @@ function Profile() {
                                 required
                             />
                         </Form.Group>
+                        <Button type="submit">Add Event</Button>
+                    </Form>
+                </Col>
+            </Row>
+            {/* Weekly Schedule Display */}
+            <Row>
+                <Col>
+                    <h2>Weekly Schedule</h2>
+                    <Row>
+                        {Object.keys(schedule).map(day => (
+                            <Col key={day} md={4} lg={3}>
+                                <Card>
+                                    <Card.Header>{day}</Card.Header>
+                                    <ListGroup variant="flush">
+                                        {schedule[day].length === 0 ? (
+                                            <ListGroup.Item>No events</ListGroup.Item>
+                                        ) : (
+                                            schedule[day].map((event, index) => (
+                                                <ListGroup.Item key={index}>
+                                                    {event.time} - {event.name}
+                                                </ListGroup.Item>
+                                            ))
+                                        )}
+                                    </ListGroup>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                </Col>
+            </Row>
+        </Container>
+    );
+}
 export default Profile;
 
