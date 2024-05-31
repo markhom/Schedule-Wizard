@@ -16,6 +16,16 @@ function Profile() {
     const { username } = useParams();  // Get the 'username' parameter from the URL
     const { loading, error, data } = useQuery(GET_USER, { variables: { username } });  // Fetch user data with Apollo Client 
 
+        // State to manage the user's schedule
+        const [schedule, setSchedule] = useState({
+            Monday: [],
+            Tuesday: [],
+            Wednesday: [],
+            Thursday: [],
+            Friday: [],
+            Saturday: [],
+            Sunday: []
+        });
     // State variables to manage user data, loading status, and any errors
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
