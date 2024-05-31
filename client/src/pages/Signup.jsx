@@ -17,12 +17,13 @@ const Signup = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
+    console.log(name, value)
     setUserFormData({ ...userFormData, [name]: value });
   };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    //console.log(formState);
+    console.log(userFormData);
 
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
@@ -31,14 +32,14 @@ const Signup = () => {
     }
 
     try {
+      //console.log(data);
       const { data } = await addUser({
         variables: { ...userFormData },
       });
 
-      console.log(data);
-      Auth.login(data.addUser.token);
+      //Auth.login(data.addUser.token);
     } catch (error) {
-      console.error(error);
+      console.error(error); //this is the error that's triggering
       setShowAlert(true);
     }
 
@@ -87,59 +88,3 @@ const Signup = () => {
 };
 
 export default Signup;
-
-// <main className="flex-row justify-center mb-4">
-//   <div className="col-12 col-lg-10">
-//     <div className="card">
-//       <h4 className="card-header bg-dark text-light p-2">Sign Up</h4>
-//       <div className="card-body">
-//         {data ? (
-//           <p>
-//             Success! You may now head{' '}
-//             <Link to="/">back to the homepage.</Link>
-//           </p>
-//         ) : (
-//           <form onSubmit={handleFormSubmit}>
-//             <input
-//               className="form-input"
-//               placeholder="Your username"
-//               name="username"
-//               type="text"
-//               value={formState.name}
-//               onChange={handleChange}
-//             />
-//             <input
-//               className="form-input"
-//               placeholder="Your email"
-//               name="email"
-//               type="email"
-//               value={formState.email}
-//               onChange={handleChange}
-//             />
-//             <input
-//               className="form-input"
-//               placeholder="******"
-//               name="password"
-//               type="password"
-//               value={formState.password}
-//               onChange={handleChange}
-//             />
-//             <button
-//               className="btn btn-block btn-primary"
-//               style={{ cursor: 'pointer' }}
-//               type="submit"
-//             >
-//               Submit
-//             </button>
-//           </form>
-//         )}
-
-//         {error && (
-//           <div className="my-3 p-3 bg-danger text-white">
-//             {error.message}
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   </div>
-// </main>
