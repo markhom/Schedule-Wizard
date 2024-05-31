@@ -13,8 +13,8 @@ const GET_USER = gql`
     }
 `;
 function Profile() {
-    // Extract the 'username' parameter from the URL
-    const { username } = useParams(); 
+    const { username } = useParams();  // Get the 'username' parameter from the URL
+    const { loading, error, data } = useQuery(GET_USER, { variables: { username } });  // Fetch user data with Apollo Client 
 
     // State variables to manage user data, loading status, and any errors
     const [user, setUser] = useState(null);
