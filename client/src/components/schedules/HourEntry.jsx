@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import { Button, FormControl, InputGroup } from 'react-bootstrap';
+import styles from './Schedule.module.css';  // Assuming you may want to use additional custom styling
 
-function HourEntry({ hour, activity, updateActivity }) {
+function HourEntry({ startHour, endHour, activity, updateActivity }) {
     const [isEditing, setIsEditing] = useState(false);
     const [tempActivity, setTempActivity] = useState(activity);
 
     const toggleEdit = () => {
         if (isEditing && tempActivity !== activity) {
-            updateActivity(hour, tempActivity);
+            updateActivity(startHour, endHour, tempActivity);  // Update activity with start and end times
         }
         setIsEditing(!isEditing);
     };
@@ -16,20 +18,29 @@ function HourEntry({ hour, activity, updateActivity }) {
     };
 
     return (
-        <div>
-            <label>{hour}:00 - {hour + 1}:00</label>
+        <InputGroup className="mb-3">
+            <InputGroup.Text>{`${startHour}:00 - ${endHour}:00`}</InputGroup.Text>
             {isEditing ? (
                 <>
-                    <input type="text" value={tempActivity} onChange={handleChange} />
-                    <button onClick={toggleEdit}>Save</button>
+                    <FormControl
+                        type="text"
+                        value={tempActivity}
+                        onChange={handleChange}
+                    />
+                    <Button variant="success" onClick={toggleEdit}>Save</Button>
+                    <Button variant="secondary" onClick={() => setIsEditing(false)}>Cancel</Button>  // Add Cancel button
                 </>
             ) : (
                 <>
-                    <span>{activity || "No Activity Planned"}</span>
-                    <button onClick={toggleEdit}>Edit</button>
+                    <FormControl
+                        type="text"
+                        readOnly
+                        value={activity}
+                    />
+                    <Button variant="outline-primary" onClick={toggleEdit}>Edit</Button>
                 </>
             )}
-        </div>
+        </InputGroup>
     );
 }
 

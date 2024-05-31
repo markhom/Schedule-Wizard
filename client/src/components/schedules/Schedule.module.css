@@ -1,0 +1,22 @@
+/* .schedule {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 20px;
+}
+
+.hourEntry {
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hourEntry label {
+    font-weight: bold;
+}
+
+.hourEntry input {
+    margin-right: 10px;
+} */

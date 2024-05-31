@@ -1,39 +1,34 @@
 import React, { useState } from 'react';
-import { useMutation } from '@apollo/client';
-import { ADD_SCHEDULE } from './mutations';
+import { Button, Form, Container } from 'react-bootstrap';
 
-function AddScheduleForm({ userId }) {
+function AddScheduleForm({ onSave }) {
   const [title, setTitle] = useState('');
-  const [addSchedule, { data, loading, error }] = useMutation(ADD_SCHEDULE);
 
-  const handleAddSchedule = async () => {
-    try {
-      await addSchedule({
-        variables: {
-          title,
-          owner: userId
-        }
-      });
-      console.log('Schedule added successfully!');
-      setTitle('');
-    } catch (err) {
-      console.error('Failed to add schedule:', err);
-    }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onSave({
+      title,
+      hours: Array(12).fill({ activity: 'Free', amPm: 'AM' })  // Initialize with 12 free hours
+    });
+    setTitle('');  // Clear the form
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Enter schedule title"
-      />
-      <button onClick={handleAddSchedule} disabled={loading}>
-        Add Schedule
-      </button>
-      {error && <p>Error: {error.message}</p>}
-    </div>
+    <Container>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group>
+          <Form.Label>Schedule Title</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+        </Form.Group>
+        <Button type="submit">Create Schedule</Button>
+      </Form>
+    </Container>
   );
 }
 
