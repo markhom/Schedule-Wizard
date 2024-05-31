@@ -1,15 +1,24 @@
 import React from 'react';
 
-function Navbar () {
+const Navbar = ({ isAuthenticated }) => {
   return (
     <nav>
+      <h1>My App</h1>
       <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/about">About</a></li>
-        <li><a href="/contact">Contact</a></li>
+        {isAuthenticated ? (
+          <>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/logout">Logout</a></li>
+          </>
+        ) : (
+          <>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/signup">Sign Up</a></li>
+          </>
+        )}
       </ul>
     </nav>
   );
-}
+};
 
 export default Navbar;
