@@ -88,5 +88,14 @@ function Profile() {
                                 <option value="Sunday">Sunday</option>
                             </Form.Control>
                         </Form.Group>
+                        <Form.Group controlId="event-time">
+                            <Form.Label>Event Time</Form.Label>
+                            <Form.Control
+                                type="time"
+                                value={eventTime}
+                                onChange={(e) => setEventTime(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
 export default Profile;
 
