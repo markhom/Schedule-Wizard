@@ -31,7 +31,27 @@ function Profile() {
     const [eventName, setEventName] = useState('');
     const [eventDay, setEventDay] = useState('Monday');
     const [eventTime, setEventTime] = useState('');
+
+        // Handle form submission to add events to the schedule
+        const handleScheduleSubmit = (e) => {
+            e.preventDefault();
+            setSchedule(prevSchedule => ({
+                ...prevSchedule,
+                [eventDay]: [...prevSchedule[eventDay], { name: eventName, time: eventTime }]
+            }));
+            setEventName('');
+            setEventTime('');
+        };
     
+        if (loading) return <div>Loading...</div>;  // Show loading message while data is being fetched
+        if (error) return <div>Error: {error.message}</div>;  // Show error message if fetching fails
+    
+        const user = data.user;  // Extract user data from query result
+
+
+
+
+
     // Function to fetch user data from an API
     const fetchUserData = async (username) => {
         try {
