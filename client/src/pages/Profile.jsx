@@ -57,5 +57,19 @@ function Profile() {
                         <p>Username: {user.username}</p>
                     </Col>
                 </Row>
+            {/* Form to create a schedule event */}
+            <Row>
+                <Col>
+                    <h2>Create Your Schedule</h2>
+                    <Form onSubmit={handleScheduleSubmit}>
+                        <Form.Group controlId="event-name">
+                            <Form.Label>Event Name</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={eventName}
+                                onChange={(e) => setEventName(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
 export default Profile;
 
