@@ -71,5 +71,22 @@ function Profile() {
                                 required
                             />
                         </Form.Group>
+                        <Form.Group controlId="event-day">
+                            <Form.Label>Day</Form.Label>
+                            <Form.Control
+                                as="select"
+                                value={eventDay}
+                                onChange={(e) => setEventDay(e.target.value)}
+                                required
+                            >
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                                <option value="Saturday">Saturday</option>
+                                <option value="Sunday">Sunday</option>
+                            </Form.Control>
+                        </Form.Group>
 export default Profile;
 
