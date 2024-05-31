@@ -3,6 +3,15 @@ import { useParams } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 import { Container, Row, Col, Form, Button, Card, ListGroup } from 'react-bootstrap';
 
+// Define GraphQL query to get user data
+const GET_USER = gql`
+    query GetUser($username: String!) {
+        user(username: $username) {
+            email
+            username
+        }
+    }
+`;
 function Profile() {
     // Extract the 'username' parameter from the URL
     const { username } = useParams(); 
