@@ -26,11 +26,12 @@ function Profile() {
             Saturday: [],
             Sunday: []
         });
-    // State variables to manage user data, loading status, and any errors
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
+    // State for form inputs
+    const [eventName, setEventName] = useState('');
+    const [eventDay, setEventDay] = useState('Monday');
+    const [eventTime, setEventTime] = useState('');
+    
     // Function to fetch user data from an API
     const fetchUserData = async (username) => {
         try {
