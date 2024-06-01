@@ -1,7 +1,7 @@
 import { useState } from 'react';
 //import { Link } from 'react-router-dom';
 import { Form, Button, Alert } from 'react-bootstrap';
-
+import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../graphql/mutations';
 
@@ -13,6 +13,7 @@ const Signup = () => {
 
   const [showAlert, setShowAlert] = useState(false);
   const [addUser, { error, data }] = useMutation(ADD_USER);
+  const navigate = useNavigate();
 
 
   const handleInputChange = (event) => {
@@ -37,9 +38,10 @@ const Signup = () => {
         variables: { ...userFormData },
       });
 
-      //Auth.login(data.addUser.token);
+      Auth.login(data.addUser.token);
+      navigate('/profile'); // Navigate to the profile page after successful signup
     } catch (error) {
-      console.error(error); //this is the error that's triggering
+      console.error(error);
       setShowAlert(true);
     }
 
