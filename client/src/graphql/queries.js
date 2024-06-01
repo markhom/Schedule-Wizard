@@ -1,7 +1,5 @@
 import { gql } from '@apollo/client';
 
-// Import gql from Apollo Client
-import { gql } from '@apollo/client';
 
 // Query to fetch user data
 export const GET_USER = gql`
