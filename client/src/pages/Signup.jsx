@@ -17,13 +17,13 @@ const Signup = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    console.log(name, value)
+    //console.log(name, value)
     setUserFormData({ ...userFormData, [name]: value });
   };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    console.log(userFormData);
+    //console.log(userFormData);
 
     const form = event.currentTarget;
     if (form.checkValidity() === false) {

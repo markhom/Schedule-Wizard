@@ -3,24 +3,21 @@ const { gql } = require('apollo-server-express');
 const typeDefs = gql`
   type User {
     _id: ID
-    username: String!
-    email: String!
-    password: String!
-    schedules: [Schedule]  
+    username: String
+    email: String
+    scheduleCount: Int
+    schedules: [Schedule]!
   }
 
   type Schedule {
-    _id: ID!
-    title: String!
-    owner: User!  
-    activities: [Activity]  
+    scheduleId: ID
+    title: String  
+    activities: [Activity]!
   }
 
   type Activity {
-    _id: ID!
-    title: String!
-    startTime: String!
-    endTime: String!
+    activityId: ID
+    title: String
     description: String
   }
 
@@ -29,23 +26,35 @@ const typeDefs = gql`
     user: User
   }
 
+  input scheduleContent {
+    scheduleId: String
+    title: String
+    activities: [String]
+  }
+
+  input activityContent {
+    activityId: String
+    title: String
+    description: String
+  }
+
   type Query {
     users: [User]
-    user(username: String!): User
+    user(userId: ID!): User
+    me: User
     schedules: [Schedule]
-    schedule(_id: ID!): Schedule
+    schedule: Schedule
   }
 
   type Mutation {
-    addUser(username: String!, email: String!, password: String!): User
-    addSchedule(title: String!, owner: ID!): Schedule
+    addUser(username: String!, email: String!, password: String!): Auth
+    login(email: String!, password: String!): Auth
+    addSchedule(title: String!, owner: ID!): User
     updateSchedule(id: ID!, title: String!): Schedule  
     deleteSchedule(id: ID!): Schedule  
     addActivity(title: String!, startTime: String!, endTime: String!, description: String, scheduleId: ID!): Activity
     updateActivity(id: ID!, title: String!, description: String!, startTime: String!, endTime: String!): Activity  
-    deleteActivity(id: ID!): Activity  
-    login(email: String!, password: String!): Auth
-    signUp(username: String!, email: String!, password: String!): Auth
+    deleteActivity(activityId: ID!): Schedule 
   }
 `;
 
