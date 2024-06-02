@@ -106,9 +106,10 @@ const resolvers = {
       }
       throw new AuthenticationError('You must be logged in');
     },
-    userSchedules: async (parent, { userId }) => {
-      return Schedule.find({ owner: userId });
-    },
+    //Note: don't need below because calling users will return schedules
+    // userSchedules: async (parent, { userId }) => {
+    //   return Schedule.find({ owner: userId });
+    // },
   },
   Mutation: {
     addUser: async (parent, args) => {
@@ -128,19 +129,22 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    addSchedule: async (parent, { title, owner, activities }, context) => {
-      if (!context.user) {
-        throw new AuthenticationError('You must be logged in to create a schedule');
+    addSchedule: async (parent, { title }, context) => {
+
+      if (context.user) {
+        const schedule = await Schedule.create({
+          title: title,
+          owner: context.user.username
+        })
+
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $push: { schedules: schedule._id } },
+          { new: true });
+
+        return updatedUser
       }
-      const schedule = new Schedule({ title, owner, activities });
-      try {
-        const createdSchedule = await schedule.save();
-        await User.findByIdAndUpdate(owner, { $push: { schedules: createdSchedule._id } });
-        return createdSchedule;
-      } catch (error) {
-        console.error('Error in addSchedule resolver:', error);
-        throw new Error('Failed to create schedule');
-      }
+      throw AuthenticationError
     },
     updateSchedule: async (parent, { id, title }) => Schedule.findByIdAndUpdate(id, { title }, { new: true }),
     deleteSchedule: async (parent, { id }) => Schedule.findByIdAndRemove(id),
