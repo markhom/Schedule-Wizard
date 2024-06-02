@@ -1,3 +1,4 @@
+import React from 'react';
 import './App.css';
 import {
   ApolloClient,
@@ -7,15 +8,12 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { Outlet } from 'react-router-dom';
-import {useState, useEffect} from 'react';
- 
+
+import { AuthProvider } from './auth/AuthContext'; 
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
-import Profile from './pages/Profile';
-import Home from './pages/Home';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
@@ -42,23 +40,18 @@ const client = new ApolloClient({
 });
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem('_id'); // Adjusted to look for _id
-    setIsAuthenticated(!!token); // Set to true if _id exists, false otherwise
-  }, []);
-
   return (
     <ApolloProvider client={client}>
-      <div className="flex-column justify-flex-start min-100-vh">
-        <Header />
-        <Navbar isAuthenticated={isAuthenticated} /> {/* Pass the authentication status */}
-        <div className="container">
-          <Outlet />
+      <AuthProvider> {/* AuthProvider wraps all components that need auth state */}
+        <div className="flex-column justify-flex-start min-100-vh">
+          <Header />
+          <Navbar /> {/* Navbar can now use the context for authentication */}
+          <div className="container">
+            <Outlet /> {/* Used for rendering child components */}
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      </AuthProvider>
     </ApolloProvider>
   );
 }

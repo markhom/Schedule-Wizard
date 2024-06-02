@@ -28,14 +28,10 @@ mutation AddUser($username: String!, $email: String!, $password: String!) {
 
 // Mutation to add a new schedule
 export const ADD_SCHEDULE = gql`
-  mutation AddSchedule($title: String!, $owner: ID!) {
-    addSchedule(title: $title, owner: $owner) {
+  mutation AddSchedule($title: String!, $owner: ID!, $activities: [ActivityInput!]!) {
+    addSchedule(title: $title, owner: $owner, activities: $activities) {
       _id
       title
-      owner {
-        _id
-        username
-      }
       activities {
         _id
         title
@@ -66,3 +62,21 @@ export const DELETE_SCHEDULE = gql`
     }
   }
 `;
+
+const GET_USER = gql`
+  query GetUser($username: String!) {
+    user(username: $username) {
+      email
+      username
+      schedules {
+        _id
+        title
+        activities {
+          _id
+          title
+        }
+      }
+    }
+  }
+`;
+

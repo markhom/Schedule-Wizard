@@ -85,50 +85,65 @@ const { signToken, AuthenticationError } = require('../auth/auth');
 // };
 
 const resolvers = {
-  // Below returns a single user by id
   Query: {
-    users: async () => {
-      return User.find();
+    users: async () => User.find(),
+    user: async (parent, { username }) => {
+      return User.findOne({ username }).populate({
+        path: 'schedules',
+        populate: {
+          path: 'activities',
+        },
+      });
     },
-
-    user: async (parent, { userId }) => {
-     return User.findOne({ _id: userId});
-    },
-
     me: async (parent, args, context) => {
       if (context.user) {
-        return User.findOne({ _id: context.user._id })
+        return User.findOne({ _id: context.user._id }).populate({
+          path: 'schedules',
+          populate: {
+            path: 'activities',
+          },
+        });
       }
-      throw AuthenticationError
-    }
+      throw new AuthenticationError('You must be logged in');
+    },
+    userSchedules: async (parent, { userId }) => {
+      return Schedule.find({ owner: userId });
+    },
   },
-
-  //Below creates a new user
   Mutation: {
     addUser: async (parent, args) => {
       const user = await User.create(args);
       const token = signToken(user);
-
       return { token, user };
     },
-
-    //Below signs in an existing user
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
-
       if (!user) {
-        throw AuthenticationError;
+        throw new AuthenticationError('No user found with this email address');
       }
-
       const correctPw = await user.isCorrectPassword(password);
-
       if (!correctPw) {
-        throw AuthenticationError;
+        throw new AuthenticationError('Incorrect credentials');
       }
-
       const token = signToken(user);
       return { token, user };
     },
+    addSchedule: async (parent, { title, owner, activities }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('You must be logged in to create a schedule');
+      }
+      const schedule = new Schedule({ title, owner, activities });
+      try {
+        const createdSchedule = await schedule.save();
+        await User.findByIdAndUpdate(owner, { $push: { schedules: createdSchedule._id } });
+        return createdSchedule;
+      } catch (error) {
+        console.error('Error in addSchedule resolver:', error);
+        throw new Error('Failed to create schedule');
+      }
+    },
+    updateSchedule: async (parent, { id, title }) => Schedule.findByIdAndUpdate(id, { title }, { new: true }),
+    deleteSchedule: async (parent, { id }) => Schedule.findByIdAndRemove(id),
   },
 };
 

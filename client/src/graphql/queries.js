@@ -29,3 +29,27 @@ export const GET_SCHEDULES = gql`
     }
   }
 `;
+
+export const ME = gql`
+  query Me {
+    me {
+      _id
+      username
+      email
+    }
+  }
+`;
+
+export const GET_USER_SCHEDULES = gql`
+  query getUserSchedules($userId: ID!) {
+    userSchedules(userId: $userId) {
+      _id
+      title
+      activities {
+        title
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;

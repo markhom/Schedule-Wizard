@@ -1,19 +1,33 @@
-import React from 'react';
 
-const Navbar = ({ isAuthenticated }) => {
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext';
+
+const Navbar = () => {
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
+  console.log('Navbar - User:', user);
+
   return (
     <nav>
       <h1>My App</h1>
       <ul>
-        {isAuthenticated ? (
+        {isAuthenticated && user ? (
           <>
-            <li><a href="/profile">Profile</a></li>
-            <li><a href="/logout">Logout</a></li>
+            <li><Link to={`/profile/${user.username}`}>Profile</Link></li>
+            <li><Link to="/create-schedule">Create Schedule</Link></li>
+            <li><Link to="/" onClick={handleLogout}>Logout</Link></li>
           </>
         ) : (
           <>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/signup">Sign Up</a></li>
+            <li><Link to="/login">Login</Link></li>
+            <li><Link to="/signup">Sign Up</Link></li>
           </>
         )}
       </ul>
