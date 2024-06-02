@@ -112,11 +112,32 @@ const resolvers = {
     // },
   },
   Mutation: {
-    addUser: async (parent, args) => {
-      const user = await User.create(args);
-      const token = signToken(user);
-      return { token, user };
+    addUser: async (parent, { username, email, password }) => {
+        // Check if the user already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            throw new Error('A user with this email already exists.');
+        }
+      
+        try {
+            const user = await User.create({ username, email, password });
+            const token = signToken(user);
+            return { token, user };
+        } catch (error) {
+            // Log the complete error object and specific details to help diagnose the problem
+            console.error('Error creating user:', error.message);
+            console.error('Error stack:', error.stack); // Provides a stack trace
+
+            // Optionally, log the input data to understand context (be careful with sensitive data like passwords)
+            console.error('Attempted user creation with email:', email);
+            // Do not log passwords in production environments, it's shown here for debugging purposes only
+            console.error('Attempted user creation with password:', password);
+
+            throw new Error('Failed to create user. Please check the provided data.');
+        }
     },
+
+
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
       if (!user) {

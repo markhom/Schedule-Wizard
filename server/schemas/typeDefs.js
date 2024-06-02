@@ -34,10 +34,9 @@ const typeDefs = gql`
     token: ID!
     user: User
   }
-
   type Query {
     users: [User]
-    findUserByUsername(username: String!): User
+    user(username: String!): User 
     me: User
     schedules: [Schedule]
     schedule(_id: ID!): Schedule
