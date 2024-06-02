@@ -13,17 +13,21 @@ const typeDefs = gql`
     title: String
     owner: User
     activities: [Activity]
-    createdAt: String
-    updatedAt: String
   }
 
   type Activity {
     _id: ID
     title: String
+    startTime: String
+    endTime:String
+    description: String
   }
 
   input ActivityInput {
     title: String
+    startTime: String
+    endTime:String
+    description: String
   }
 
   type Auth {
@@ -33,19 +37,21 @@ const typeDefs = gql`
 
   type Query {
     users: [User]
-    user(username: String!): User
+    findUserByUsername(username: String!): User
     me: User
     schedules: [Schedule]
     schedule(_id: ID!): Schedule
-    userSchedules(userId: ID!): [Schedule]
   }
 
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-    addSchedule(title: String!, owner: ID!, activities: [ActivityInput]!): Schedule
-    updateSchedule(id: ID!, title: String!): Schedule  
-    deleteSchedule(id: ID!): Schedule  
+    addSchedule(title: String!): User
+    updateSchedule(scheduleId: ID!, title: String!): User
+    deleteSchedule(scheduleId: ID!): User  
+    addActivity(activityData: ActivityInput): Schedule
+    removeActivity(activityId: ID): Schedule
+    updateActivity(activityId: ID, startTime: String, endTime: String ): Activity
   }
 `;
 
