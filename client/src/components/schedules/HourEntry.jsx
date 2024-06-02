@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, FormControl, InputGroup } from 'react-bootstrap';
-import styles from './Schedule.module.css';  // Assuming you may want to use additional custom styling
+import styles from './Schedule.module.css';  
 
 function HourEntry({ startHour, endHour, activity, updateActivity }) {
     const [isEditing, setIsEditing] = useState(false);

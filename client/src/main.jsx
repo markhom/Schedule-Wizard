@@ -7,7 +7,8 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import ErrorPage from './pages/ErrorPage';
-import Schedule from './components/schedules/Schedule.jsx'
+import Schedule from './components/schedules/Schedule.jsx';
+import ScheduleCreationPage from './components/schedules/ScheduleCreationPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -25,11 +26,15 @@ const router = createBrowserRouter([
         path: '/signup',
         element: <Signup />
       }, {
-        path: '/profiles/:username',
+        path: '/profile/:username',
         element: <Profile />
       }, {
         path: 'schedule',
         element: <Schedule />
+      },
+      {
+        path: 'create-schedule',
+        element: <ScheduleCreationPage />
       }
     ]
   },
@@ -37,4 +42,5 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <RouterProvider router={router} />
-)
+);
+

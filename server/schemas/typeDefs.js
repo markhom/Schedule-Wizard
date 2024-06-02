@@ -5,20 +5,25 @@ const typeDefs = gql`
     _id: ID
     username: String
     email: String
-    scheduleCount: Int
-    schedules: [Schedule]!
+    schedules: [Schedule]
   }
 
   type Schedule {
-    scheduleId: ID
-    title: String  
-    activities: [Activity]!
+    _id: ID
+    title: String
+    owner: User
+    activities: [Activity]
+    createdAt: String
+    updatedAt: String
   }
 
   type Activity {
-    activityId: ID
+    _id: ID
     title: String
-    description: String
+  }
+
+  input ActivityInput {
+    title: String
   }
 
   type Auth {
@@ -26,37 +31,25 @@ const typeDefs = gql`
     user: User
   }
 
-  input scheduleContent {
-    scheduleId: String
-    title: String
-    activities: [String]
-  }
-
-  input activityContent {
-    activityId: String
-    title: String
-    description: String
-  }
-
   type Query {
     users: [User]
-    user(userId: ID!): User
+    user(username: String!): User
     me: User
     schedules: [Schedule]
-    schedule: Schedule
+    schedule(_id: ID!): Schedule
+    userSchedules(userId: ID!): [Schedule]
   }
 
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-    addSchedule(title: String!, owner: ID!): User
+    addSchedule(title: String!, owner: ID!, activities: [ActivityInput]!): Schedule
     updateSchedule(id: ID!, title: String!): Schedule  
     deleteSchedule(id: ID!): Schedule  
-    addActivity(title: String!, startTime: String!, endTime: String!, description: String, scheduleId: ID!): Activity
-    updateActivity(id: ID!, title: String!, description: String!, startTime: String!, endTime: String!): Activity  
-    deleteActivity(activityId: ID!): Schedule 
   }
 `;
 
 module.exports = typeDefs;
+
+
 
