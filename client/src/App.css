@@ -951,6 +951,10 @@ a:hover {
   background-color: #1b89bc !important;
 }
 
+.bg-green {
+  background-color: #38ed6e;
+}
+
 /* DISPLAY */
 .display-none {
   display: none !important;

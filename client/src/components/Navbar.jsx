@@ -16,7 +16,7 @@ const NavbarComponent = () => {
   console.log('Navbar - User:', user);
 
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar bg="green" expand="lg">
       <Container>
         <Navbar.Brand as={Link} to="/">Home</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
