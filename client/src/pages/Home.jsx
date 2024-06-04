@@ -4,7 +4,7 @@ function Home() {
     return (
         <div>
             <h1>Welcome to ScheduleWizard</h1>
-            <p>Your go-to app for managing and sharing your schedules efficiently.</p>
+            <p class='siteText'>Your go-to app for managing and sharing your schedules efficiently.</p>
         </div>
     );
 }
