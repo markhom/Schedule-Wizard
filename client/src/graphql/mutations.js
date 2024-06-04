@@ -42,17 +42,19 @@ mutation AddSchedule($title: String!) {
 `;
 
 // Mutation to update an existing schedule
+//Below is working. Note, it excludes 'activities' for now
 export const UPDATE_SCHEDULE = gql`
-  mutation UpdateSchedule($scheduleId: ID!, $title: String!) {
-    updateSchedule(scheduleId: $scheduleId, title: $title) {
+mutation UpdateSchedule($scheduleId: ID!, $title: String!) {
+  updateSchedule(scheduleId: $scheduleId, title: $title) {
+    _id
+    schedules {
       _id
       title
-      activities {
-        _id
-        title
-      }
     }
+    email
+    username
   }
+}
 `;
 
 // Mutation to delete a schedule
