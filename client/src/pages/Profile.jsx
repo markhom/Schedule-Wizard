@@ -216,8 +216,8 @@ function Profile() {
             {/* User Profile Information */}
             <Row>
                 <Col>
-                    <p>Email: {user.email}</p>
-                    <p>Username: {user.username}</p>
+                    <p class='siteText'>Email: {user.email}</p>
+                    <p class ='siteText'>Username: {user.username}</p>
                 </Col>
             </Row>
             {/* Display user's schedules */}
@@ -225,7 +225,7 @@ function Profile() {
                 <Col>
                     <h2>Your Schedules</h2>
                     {user.schedules.length === 0 ? (
-                        <p>No schedules available</p>
+                        <p class='siteText'>No schedules available</p>
                     ) : (
                         user.schedules.map(schedule => (
                             <Card key={schedule._id}>
