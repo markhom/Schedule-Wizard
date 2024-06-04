@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
@@ -18,10 +17,10 @@ const NavbarComponent = () => {
   return (
     <Navbar bg="green" expand="lg">
       <Container>
-        <Navbar.Brand as={Link} to="/">Home</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/" className='ms-auto'>Home</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+          <Nav className="ms-auto">
             {isAuthenticated && user ? (
               <>
                 <Nav.Link as={Link} to={`/profile/${user.username}`}>Profile</Nav.Link>
