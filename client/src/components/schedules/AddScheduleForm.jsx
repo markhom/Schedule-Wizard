@@ -3,19 +3,18 @@ import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
 import { ADD_SCHEDULE } from '../../graphql/mutations';
 
+const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
 function AddScheduleForm({ user }) {
   const [title, setTitle] = useState('');
-  const [activities, setActivities] = useState(Array(24).fill({ title: '' }));
+  const [selectedDay, setSelectedDay] = useState(null);
+  const [activities, setActivities] = useState(
+    Array.from({ length: 7 }, () => Array(17).fill(''))
+  );
   const [addSchedule] = useMutation(ADD_SCHEDULE);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
-  };
-
-  const handleActivityChange = (index, value) => {
-    const newActivities = [...activities];
-    newActivities[index] = { title: value || '' };
-    setActivities(newActivities);
   };
 
   const handleSubmit = async (event) => {
@@ -38,7 +37,7 @@ function AddScheduleForm({ user }) {
       console.log('Schedule created successfully:', data);
       alert('Schedule created successfully!');
       setTitle('');
-      setActivities(Array(24).fill({ title: '' }));
+      setActivities(Array.from({ length: 7 }, () => Array(17).fill('')));
     } catch (error) {
       console.error('Error creating schedule:', error);
       if (error.graphQLErrors) {
@@ -57,38 +56,63 @@ function AddScheduleForm({ user }) {
     return `${formattedHour} ${isPM ? 'PM' : 'AM'}`;
   };
 
+  const handleDayClick = (dayIndex) => {
+    setSelectedDay(selectedDay === dayIndex ? null : dayIndex);
+  };
+
+  const handleActivityChange = (dayIndex, hourIndex, value) => {
+    const newActivities = [...activities];
+    newActivities[dayIndex][hourIndex] = value;
+    setActivities(newActivities);
+  };
+
   return (
-    <Container>
+    <Container fluid>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
-          <Form.Label>Schedule Title</Form.Label>
+          <Form.Label className="h4">Schedule Title</Form.Label>
           <Form.Control
             type="text"
             placeholder="Enter schedule title"
             value={title}
             onChange={handleTitleChange}
             required
+            style={{ fontSize: '14px' }}
           />
         </Form.Group>
-        {activities.map((activity, index) => (
-          <Row key={index} className="mb-3">
-            <Col xs={4}>
-              <Form.Label>{formatHour(index)}:</Form.Label>
+        <Row className="mb-3">
+          {daysOfWeek.map((day, dayIndex) => (
+            <Col key={dayIndex} xs={6} sm={4} md={2} lg={1} className="text-center mb-2">
+              <Button
+                variant={selectedDay === dayIndex ? 'primary' : 'secondary'}
+                onClick={() => handleDayClick(dayIndex)}
+                block
+                style={{ minWidth: '100px' }}
+              >
+                {day}
+              </Button>
+              {selectedDay === dayIndex && (
+                <div className="mt-2">
+                  {Array.from({ length: 17 }).map((_, hourIndex) => (
+                    <Form.Control
+                      key={hourIndex}
+                      type="text"
+                      placeholder={formatHour(hourIndex + 6)}
+                      value={activities[dayIndex][hourIndex]}
+                      onChange={(e) => handleActivityChange(dayIndex, hourIndex, e.target.value)}
+                      style={{ fontSize: '12px', marginBottom: '8px', minWidth: '100px' }}
+                    />
+                  ))}
+                </div>
+              )}
             </Col>
-            <Col>
-              <Form.Control
-                type="text"
-                placeholder={`Activity for ${formatHour(index)}`}
-                value={activity.title}
-                onChange={(e) => handleActivityChange(index, e.target.value)}
-              />
-            </Col>
-          </Row>
-        ))}
-        <Button type="submit">Create Schedule</Button>
+          ))}
+        </Row>
+        <Button type="submit" className="mt-3" variant="primary">Create Schedule</Button>
       </Form>
     </Container>
   );
 }
 
 export default AddScheduleForm;
+
