@@ -94,14 +94,20 @@ function AddScheduleForm({ user }) {
               {selectedDay === dayIndex && (
                 <div className="mt-2">
                   {Array.from({ length: 17 }).map((_, hourIndex) => (
-                    <Form.Control
-                      key={hourIndex}
-                      type="text"
-                      placeholder={formatHour(hourIndex + 6)}
-                      value={activities[dayIndex][hourIndex]}
-                      onChange={(e) => handleActivityChange(dayIndex, hourIndex, e.target.value)}
-                      style={{ fontSize: '12px', marginBottom: '8px', minWidth: '100px' }}
-                    />
+                    <Row key={hourIndex}>
+                      <Col xs={4} className="text-end">
+                        <span>{formatHour(hourIndex + 6)}</span>
+                      </Col>
+                      <Col xs={8}>
+                        <Form.Control
+                          type="text"
+                          placeholder=""
+                          value={activities[dayIndex][hourIndex]}
+                          onChange={(e) => handleActivityChange(dayIndex, hourIndex, e.target.value)}
+                          style={{ fontSize: '12px', marginBottom: '8px', minWidth: '300px' }}
+                        />
+                      </Col>
+                    </Row>
                   ))}
                 </div>
               )}
