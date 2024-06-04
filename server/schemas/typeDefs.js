@@ -11,7 +11,6 @@ const typeDefs = gql`
   type Schedule {
     _id: ID
     title: String
-    owner: User
     activities: [Activity]
   }
 

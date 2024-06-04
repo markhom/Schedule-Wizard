@@ -104,7 +104,7 @@ const resolvers = {
           },
         });
       }
-      throw new AuthenticationError('You must be logged in');
+      throw AuthenticationError;
     },
     //Note: don't need below because calling users will return schedules
     // userSchedules: async (parent, { userId }) => {
@@ -155,20 +155,46 @@ const resolvers = {
       if (context.user) {
         const schedule = await Schedule.create({
           title: title,
-          owner: context.user.username
+          //Will Activities need to go here?
         })
 
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
           { $push: { schedules: schedule._id } },
-          { new: true });
-
+          { new: true }
+        );
         return updatedUser
       }
-      throw AuthenticationError
+      throw AuthenticationError;
     },
-    updateSchedule: async (parent, { id, title }) => Schedule.findByIdAndUpdate(id, { title }, { new: true }),
-    deleteSchedule: async (parent, { id }) => Schedule.findByIdAndRemove(id),
+
+    updateSchedule: async (parent, { scheduleId, title }, context ) => {
+      const schedule = Schedule.findOneAndUpdate(
+        { _id: context.user._id},
+        { $push: { schedules: scheduleId} },
+        { new: true },
+      )
+      if (!schedule) {
+        throw AuthenticationError;
+      }
+    },
+
+    deleteSchedule: async (parent, { scheduleId }, context ) => {
+      if (context.user) {
+        const schedule = await Schedule.findByIdAndRemove({ //should this be findOneAndDelete?
+          _id: scheduleId,
+          //Anything else here?
+        });
+
+        await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $pull: { schedules: schedule._id } }
+        );
+
+        return schedule;
+      }
+      throw AuthenticationError;
+    } 
   },
 };
 
