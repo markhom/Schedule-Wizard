@@ -8,11 +8,6 @@ const scheduleSchema = new Schema({
     trim: true,
     maxlength: 100,
   },
-  owner: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
   activities: [{
     type: Schema.Types.ObjectId,
     ref: 'Activity'
