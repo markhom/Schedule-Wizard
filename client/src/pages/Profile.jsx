@@ -177,7 +177,7 @@
 
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 import { Container, Row, Col, Card, ListGroup } from 'react-bootstrap';
 
@@ -229,7 +229,9 @@ function Profile() {
                     ) : (
                         user.schedules.map(schedule => (
                             <Card key={schedule._id}>
-                                <Card.Header>{schedule.title}</Card.Header>
+                                <Card.Header>
+                                    <Link to={`/schedules/${schedule._id}`}>{schedule.title}</Link>
+                                </Card.Header>
                                 <ListGroup variant="flush">
                                     {schedule.activities.map(activity => (
                                         <ListGroup.Item key={activity._id}>{activity.title}</ListGroup.Item>

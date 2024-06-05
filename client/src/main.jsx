@@ -12,6 +12,7 @@ import ErrorPage from './pages/ErrorPage';
 import CheckoutForm from './pages/CheckoutForm';
 import Schedule from './components/schedules/Schedule.jsx';
 import ScheduleCreationPage from './components/schedules/ScheduleCreationPage.jsx';
+import ScheduleDetail from './components/schedules/ScheduleDetail.jsx';
 
 const router = createBrowserRouter([
   {
