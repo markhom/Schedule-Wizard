@@ -128,7 +128,7 @@ function AddScheduleForm({ user }) {
             </Col>
           </Row>
         )}
-        <div style={{ position: 'fixed', bottom: '40px', right: '50px' }}>
+        <div style={{ position: 'fixed', bottom: '80px', right: '50px' }}>
           <Button type="submit" className="animated-button" variant="primary">Create Schedule</Button>
         </div>
       </Form>
