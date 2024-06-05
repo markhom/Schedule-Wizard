@@ -4,7 +4,7 @@ const { expressMiddleware } = require('@apollo/server/express4');
 const path = require('path');
 const { authMiddleware } = require('./auth/auth');
 require('dotenv').config();
-
+const stripe = require('stripe')(process.env.sk_test_51PMJWV089fmhV5vfOEcYG6ChPqP40ON9OxkvLHclp3IK1aoQxqE4sAR9M9EtFqF9TzjoTdvKvuFpRZZvT6DJtQMy00SNPIXoZs);
 
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
@@ -27,6 +27,24 @@ const startApolloServer = async () => {
   app.use('/graphql', expressMiddleware(server, {
     context: authMiddleware
   }));
+
+  //Add Payment Processing Route
+  app.post('/create-payment-intent', async (req, res) => {
+    const { amount } = req.body;
+
+    try{
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount,
+        currency: 'usd',
+      });
+
+      res.status(200).send({
+        clientSecret: paymentIntent.client_secret,
+      });
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  });
 
   if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../client/dist')));
