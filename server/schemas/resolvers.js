@@ -1,7 +1,9 @@
 const { User, Schedule, Activity } = require('../models');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { signToken, AuthenticationError } = require('../auth/auth');
+
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // const resolvers = {
 //   Query: {

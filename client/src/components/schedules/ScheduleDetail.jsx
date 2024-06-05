@@ -1,12 +1,12 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { GET_ONE_SCHEDULE } from '../../graphql/queries'; 
+import { GET_ONE_SCHEDULE } from '../../graphql/queries';
 
 function ScheduleDetail() {
     const { scheduleId } = useParams(); 
     const { loading, error, data } = useQuery(GET_ONE_SCHEDULE, {
-        variables: { scheduleId }
+        variables: { id: scheduleId }
     });
 
     if (loading) return <div>Loading...</div>;
@@ -34,4 +34,4 @@ function ScheduleDetail() {
 }
 
 
-export default ScheduleDetail;
+export default ScheduleDetail; 
