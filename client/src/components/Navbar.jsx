@@ -39,4 +39,4 @@ const NavbarComponent = () => {
     </Navbar>
   );
 };
-export default NavbarComponent;
+export default NavbarComponent; 
