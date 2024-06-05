@@ -9,6 +9,7 @@ import Profile from './pages/Profile';
 import ErrorPage from './pages/ErrorPage';
 import Schedule from './components/schedules/Schedule.jsx';
 import ScheduleCreationPage from './components/schedules/ScheduleCreationPage.jsx';
+import ScheduleDetail from './components/schedules/ScheduleDetail.jsx';
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: 'create-schedule',
         element: <ScheduleCreationPage />
+      },
+      {
+        path: '/schedules/:scheduleId',
+        element: <ScheduleDetail />
       }
     ]
   },
