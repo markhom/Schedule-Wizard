@@ -1,11 +1,11 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { GET_SCHEDULE_DETAILS } from '../../graphql/queries'; 
+import { GET_ONE_SCHEDULE } from '../../graphql/queries'; 
 
 function ScheduleDetail() {
     const { scheduleId } = useParams(); 
-    const { loading, error, data } = useQuery(GET_SCHEDULE_DETAILS, {
+    const { loading, error, data } = useQuery(GET_ONE_SCHEDULE, {
         variables: { scheduleId }
     });
 
