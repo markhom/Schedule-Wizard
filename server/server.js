@@ -4,7 +4,7 @@ const { expressMiddleware } = require('@apollo/server/express4');
 const path = require('path');
 const { authMiddleware } = require('./auth/auth');
 require('dotenv').config();
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
@@ -28,23 +28,23 @@ const startApolloServer = async () => {
     context: authMiddleware
   }));
 
-  // Add Payment Processing Route
-  app.post('/create-payment-intent', async (req, res) => {
-    const { amount } = req.body;
+  // // Add Payment Processing Route
+  // app.post('/create-payment-intent', async (req, res) => {
+  //   const { amount } = req.body;
 
-    try {
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount,
-        currency: 'usd',
-      });
+  //   try {
+  //     const paymentIntent = await stripe.paymentIntents.create({
+  //       amount,
+  //       currency: 'usd',
+  //     });
 
-      res.status(200).send({
-        clientSecret: paymentIntent.client_secret,
-      });
-    } catch (error) {
-      res.status(500).send({ error: error.message });
-    }
-  });
+  //     res.status(200).send({
+  //       clientSecret: paymentIntent.client_secret,
+  //     });
+  //   } catch (error) {
+  //     res.status(500).send({ error: error.message });
+  //   }
+  // });
 
   if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../client/dist')));
