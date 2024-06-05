@@ -4,7 +4,7 @@ const { expressMiddleware } = require('@apollo/server/express4');
 const path = require('path');
 const { authMiddleware } = require('./auth/auth');
 require('dotenv').config();
-const stripe = require('stripe')(process.env.sk_test_51PMJWV089fmhV5vfOEcYG6ChPqP40ON9OxkvLHclp3IK1aoQxqE4sAR9M9EtFqF9TzjoTdvKvuFpRZZvT6DJtQMy00SNPIXoZs);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
