@@ -183,8 +183,8 @@ const resolvers = {
 
     updateSchedule: async (parent, { scheduleId, title }, context ) => {
       const schedule = Schedule.findOneAndUpdate(
-        { _id: context.user._id},
-        { $push: { schedules: scheduleId} },
+        { _id: context.schedule._id},
+        { $push: { schedules: schedule._id } },
         { new: true },
       )
       if (!schedule) {
