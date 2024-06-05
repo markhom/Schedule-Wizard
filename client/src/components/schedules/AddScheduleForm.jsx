@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
 import { ADD_SCHEDULE } from '../../graphql/mutations';
@@ -68,6 +68,16 @@ function AddScheduleForm({ user }) {
 
   return (
     <Container fluid>
+      <style type="text/css">
+  {`
+    .animated-button {
+      transition: transform 0.2s;
+    }
+    .animated-button:active {
+      transform: scale(0.95);
+    }
+  `}
+</style>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
           <Form.Label className="h4">Schedule Title</Form.Label>
@@ -80,45 +90,50 @@ function AddScheduleForm({ user }) {
             style={{ fontSize: '14px' }}
           />
         </Form.Group>
-        <Row className="mb-3">
+        <div className="d-flex flex-wrap justify-content-center mb-2">
           {daysOfWeek.map((day, dayIndex) => (
-            <Col key={dayIndex} xs={6} sm={4} md={2} lg={1} className="text-center mb-2">
+            <div key={dayIndex} className="p-1">
               <Button
                 variant={selectedDay === dayIndex ? 'primary' : 'secondary'}
                 onClick={() => handleDayClick(dayIndex)}
-                block
-                style={{ minWidth: '100px' }}
+                className="animated-button"
+                style={{ minWidth: '150px', padding: '10px', }}
               >
                 {day}
               </Button>
-              {selectedDay === dayIndex && (
-                <div className="mt-2">
-                  {Array.from({ length: 17 }).map((_, hourIndex) => (
-                    <Row key={hourIndex}>
-                      <Col xs={4} className="text-end">
-                        <span>{formatHour(hourIndex + 6)}</span>
-                      </Col>
-                      <Col xs={8}>
-                        <Form.Control
-                          type="text"
-                          placeholder=""
-                          value={activities[dayIndex][hourIndex]}
-                          onChange={(e) => handleActivityChange(dayIndex, hourIndex, e.target.value)}
-                          style={{ fontSize: '12px', marginBottom: '8px', minWidth: '300px' }}
-                        />
-                      </Col>
-                    </Row>
-                  ))}
-                </div>
-              )}
-            </Col>
+            </div>
           ))}
-        </Row>
-        <Button type="submit" className="mt-3" variant="primary">Create Schedule</Button>
+        </div>
+        {selectedDay !== null && (
+          <Row>
+            <Col>
+              <div className="mt-2">
+                {Array.from({ length: 17 }).map((_, hourIndex) => (
+                  <Row key={hourIndex} className="mb-2">
+                    <Col xs={4} className="text-end">
+                      <span>{formatHour(hourIndex + 6)}</span>
+                    </Col>
+                    <Col xs={8}>
+                      <Form.Control
+                        type="text"
+                        placeholder=""
+                        value={activities[selectedDay][hourIndex]}
+                        onChange={(e) => handleActivityChange(selectedDay, hourIndex, e.target.value)}
+                        style={{ fontSize: '12px', width: '400px' }}
+                      />
+                    </Col>
+                  </Row>
+                ))}
+              </div>
+            </Col>
+          </Row>
+        )}
+        <div style={{ position: 'fixed', bottom: '40px', right: '50px' }}>
+          <Button type="submit" className="animated-button" variant="primary">Create Schedule</Button>
+        </div>
       </Form>
     </Container>
   );
 }
 
 export default AddScheduleForm;
-
