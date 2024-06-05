@@ -1,55 +1,74 @@
 import { gql } from '@apollo/client';
 
-
-// Query to fetch user data
-export const GET_USER = gql`
-  query GetUser($userId: ID!) {
-    user(id: $userId) {
-      id
-      username
-      email
-      schedules {
-        id
-        title
-      }
-    }
-  }
-`;
-
-// Query to fetch schedules
-export const GET_SCHEDULES = gql`
-  query GetSchedules {
+//Query to fetch all users
+//Below is working. Note, 'activities' is excluded
+export const GET_USERS = gql`
+ query Users {
+  users {
+    _id
+    email
     schedules {
-      id
+      _id
       title
-      owner {
-        id
-        username
-      }
     }
+    username
   }
+}
 `;
 
+// Query to fetch user data for a single user
+//Below is working. Note, 'activities' is excluded
+export const GET_USER = gql`
+query Users($username: String!) {
+  user(username: $username) {
+    _id
+    email
+    schedules {
+      _id
+      title
+    }
+    username
+  }
+}
+`;
+
+//Query to fetch user data for the owner of the acccount
+//Below is working. Note, 'activities' is currently excluded
 export const ME = gql`
-  query Me {
-    me {
-      _id
-      username
-      email
-    }
-  }
-`;
-
-export const GET_USER_SCHEDULES = gql`
-  query getUserSchedules($userId: ID!) {
-    userSchedules(userId: $userId) {
+query Query {
+  me {
+    _id
+    email
+    schedules {
       _id
       title
-      activities {
-        title
-      }
-      createdAt
-      updatedAt
     }
+    username
   }
+}
 `;
+
+// Query to fetch all schedules
+//Below is working. Again. include 'activities'
+export const GET_SCHEDULES = gql`
+query GetSchedules {
+  getSchedules {
+    _id
+    title
+  }
+}
+`;
+
+//Below is to fetch a single schedule by id
+const GET_SCHEDULE_DETAILS = gql`
+query GetScheduleDetails($scheduleId: ID!) {
+    schedule(id: $scheduleId) {
+        _id
+        title
+        activities {
+          _id
+          title
+        }
+      }
+    }
+    `;

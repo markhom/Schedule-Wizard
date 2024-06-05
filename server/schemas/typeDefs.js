@@ -37,8 +37,8 @@ const typeDefs = gql`
     users: [User]
     user(username: String!): User 
     me: User
-    schedules: [Schedule]
-    schedule(_id: ID!): Schedule
+    getSchedules: [Schedule]
+    getOneSchedule(_id: ID!): Schedule
   }
 
   type Mutation {

@@ -95,6 +95,7 @@ const resolvers = {
         },
       });
     },
+
     me: async (parent, args, context) => {
       if (context.user) {
         return User.findOne({ _id: context.user._id }).populate({
@@ -110,7 +111,19 @@ const resolvers = {
     // userSchedules: async (parent, { userId }) => {
     //   return Schedule.find({ owner: userId });
     // },
+
+    getSchedules: async () => Schedule.find(),
+
+    getOneSchedule: async (parent, { scheduleId }) => {
+      return Schedule.findOne({ _id: scheduleId });
+    }
+
   },
+
+  // thought: async (parent, { thoughtId }) => {
+  //   return Thought.findOne({ _id: thoughtId });
+  // },
+  //Below are the mutations
   Mutation: {
     addUser: async (parent, { username, email, password }) => {
         // Check if the user already exists
@@ -137,7 +150,8 @@ const resolvers = {
         }
     },
 
-
+    //Below, note to self: putting 'new' in front of AuthenticationError caused
+    //an error in another spot. Test and see if it needs to be taken out here too
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
       if (!user) {
@@ -150,14 +164,13 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    addSchedule: async (parent, { title }, context) => {
 
+    addSchedule: async (parent, { title }, context) => {
       if (context.user) {
         const schedule = await Schedule.create({
           title: title,
           //Will Activities need to go here?
         })
-
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
           { $push: { schedules: schedule._id } },
@@ -185,7 +198,6 @@ const resolvers = {
           _id: scheduleId,
           //Anything else here?
         });
-
         await User.findOneAndUpdate(
           { _id: context.user._id },
           { $pull: { schedules: schedule._id } }
