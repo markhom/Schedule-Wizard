@@ -28,11 +28,11 @@ const startApolloServer = async () => {
     context: authMiddleware
   }));
 
-  //Add Payment Processing Route
+  // Add Payment Processing Route
   app.post('/create-payment-intent', async (req, res) => {
     const { amount } = req.body;
 
-    try{
+    try {
       const paymentIntent = await stripe.paymentIntents.create({
         amount,
         currency: 'usd',
@@ -63,4 +63,4 @@ const startApolloServer = async () => {
 };
 
 // Call the async function to start the server
-  startApolloServer();
+startApolloServer();

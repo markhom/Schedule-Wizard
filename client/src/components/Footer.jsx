@@ -1,10 +1,19 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Footer() {
+    const navigate = useNavigate();
+
+    const handleDonateClick = () => {
+        navigate('/checkout');
+    };
+
     return (
         <footer>
-            <p class='siteText'>© 2024 ScheduleWizard. All rights reserved.</p>
+            <p className='siteText'>© 2024 ScheduleWizard. All rights reserved.</p>
+            <button onClick={handleDonateClick}>Donate Now</button>
         </footer>
     );
 }
 
-export default Footer;  
+export default Footer;
