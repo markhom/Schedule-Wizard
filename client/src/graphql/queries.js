@@ -41,22 +41,34 @@ query Query {
     email
     schedules {
       _id
-      username
-      email
+      title
     }
+    username
   }
+}
 `;
 
-export const GET_USER_SCHEDULES = gql`
-  query getUserSchedules($userId: ID!) {
-    userSchedules(userId: $userId) {
-      _id
-      title
-      activities {
-        title
-      }
-      createdAt
-      updatedAt
-    }
+// Query to fetch all schedules
+//Below is working. Again. include 'activities'
+export const GET_SCHEDULES = gql`
+query GetSchedules {
+  getSchedules {
+    _id
+    title
   }
+}
 `;
+
+//Below is to fetch a single schedule by id
+const GET_SCHEDULE_DETAILS = gql`
+query GetScheduleDetails($scheduleId: ID!) {
+    schedule(id: $scheduleId) {
+        _id
+        title
+        activities {
+          _id
+          title
+        }
+      }
+    }
+    `;
