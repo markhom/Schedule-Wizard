@@ -60,15 +60,11 @@ query GetSchedules {
 `;
 
 //Below is to fetch a single schedule by id
-const GET_SCHEDULE_DETAILS = gql`
-query GetScheduleDetails($scheduleId: ID!) {
-    schedule(id: $scheduleId) {
-        _id
-        title
-        activities {
-          _id
-          title
-        }
-      }
-    }
+const GET_ONE_SCHEDULE = gql`
+query GetOneSchedule($id: ID!) {
+  getOneSchedule(_id: $id) {
+    _id
+    title
+  }
+}
     `;
