@@ -60,7 +60,7 @@ query GetSchedules {
 `;
 
 //Below is to fetch a single schedule by id
-const GET_ONE_SCHEDULE = gql`
+export const GET_ONE_SCHEDULE = gql`
 query GetOneSchedule($id: ID!) {
   getOneSchedule(_id: $id) {
     _id
