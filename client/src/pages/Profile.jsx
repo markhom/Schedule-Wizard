@@ -179,7 +179,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
-import { Container, Row, Col, Card, ListGroup } from 'react-bootstrap';
+import { Container, Row, Col, Card, ListGroup, Spinner, Alert } from 'react-bootstrap';
 
 const GET_USER = gql`
   query GetUser($username: String!) {
@@ -206,30 +206,48 @@ function Profile() {
         console.log(`Profile.jsx - username from URL: ${username}`);
     }, [username]);
 
-    if (loading) return <div>Loading...</div>;  // Show loading message while data is being fetched
-    if (error) return <div>Error: {error.message}</div>;  // Show error message if fetching fails
+    if (loading) return (
+        <Container className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+            <Spinner animation="border" variant="success" />
+        </Container>
+    );  // Show loading spinner while data is being fetched
+
+    if (error) return (
+        <Container className="mt-5">
+            <Alert variant="danger">Error: {error.message}</Alert>
+        </Container>
+    );  // Show error message if fetching fails
 
     const user = data.user;  // Extract user data from query result
 
     return (
-        <Container>
+        <Container className="mt-5">
             {/* User Profile Information */}
-            <Row>
-                <Col>
-                    <p class='siteText'>Email: {user.email}</p>
-                    <p class ='siteText'>Username: {user.username}</p>
+            <Row className="mb-4">
+                <Col md={{ span: 6, offset: 3 }}>
+                    <Card className="text-center bg-success text-white">
+                        <Card.Header as="h5" className="bg-black text-white">User Profile</Card.Header>
+                        <Card.Body>
+                            <Card.Text>
+                                <strong>Email:</strong> {user.email}
+                            </Card.Text>
+                            <Card.Text>
+                                <strong>Username:</strong> {user.username}
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
                 </Col>
             </Row>
             {/* Display user's schedules */}
             <Row>
-                <Col>
-                    <h2>Your Schedules</h2>
+                <Col md={{ span: 8, offset: 2 }}>
+                    <h2 className="text-center mb-4 text-success">Your Schedules</h2>
                     {user.schedules.length === 0 ? (
-                        <p class='siteText'>No schedules available</p>
+                        <Alert variant="info">No schedules available</Alert>
                     ) : (
                         user.schedules.map(schedule => (
-                            <Card key={schedule._id}>
-                                <Card.Header>{schedule.title}</Card.Header>
+                            <Card key={schedule._id} className="mb-3">
+                                <Card.Header as="h5" className="bg-success text-white">{schedule.title}</Card.Header>
                                 <ListGroup variant="flush">
                                     {schedule.activities.map(activity => (
                                         <ListGroup.Item key={activity._id}>{activity.title}</ListGroup.Item>
