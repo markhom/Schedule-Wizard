@@ -53,3 +53,21 @@ export const GET_USER_SCHEDULES = gql`
     }
   }
 `;
+
+export const GET_SCHEDULE_DETAILS = gql`
+  query GetScheduleDetails($scheduleId: ID!) {
+    schedule(_id: $scheduleId) {
+      _id
+      title
+      activities {
+        _id
+        title
+        startTime
+        endTime
+        description
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
