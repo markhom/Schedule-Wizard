@@ -72,21 +72,3 @@ mutation DeleteSchedule($scheduleId: ID!) {
   }
 }
 `;
-
-const GET_USER = gql`
-  query GetUser($username: String!) {
-    user(username: $username) {
-      email
-      username
-      schedules {
-        _id
-        title
-        activities {
-          _id
-          title
-        }
-      }
-    }
-  }
-`;
-
