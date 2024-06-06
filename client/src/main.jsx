@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Elements } from '@stripe/react-stripe-js';
+// import { Elements } from '@stripe/react-stripe-js';
 import { stripePromise } from './utils/stripe.js'
 
 import App from './App.jsx';
@@ -13,6 +13,9 @@ import CheckoutForm from './pages/CheckoutForm';
 import Schedule from './components/schedules/Schedule.jsx';
 import ScheduleCreationPage from './components/schedules/ScheduleCreationPage.jsx';
 import ScheduleDetail from './components/schedules/ScheduleDetail.jsx';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const router = createBrowserRouter([
   {
@@ -40,14 +43,21 @@ const router = createBrowserRouter([
         path: 'create-schedule',
         element: <ScheduleCreationPage />
       },
-      {
-        path: 'checkout', // Add the route for the CheckoutForm
-        element: (
-          <Elements stripe={stripePromise}> 
-            <CheckoutForm />
-          </Elements>
-        )
-      }
+      //Need to add in a page for GET_ONE_SCHEDULE below
+      // {
+      //   path: '',
+      //   element: <></>
+      // },
+
+      
+      // {
+      //   path: 'checkout', // Add the route for the CheckoutForm
+      //   element: (
+      //     <Elements stripe={stripePromise}> 
+      //       <CheckoutForm />
+      //     </Elements>
+      //   )
+      // }
     ]
   },
 ]);

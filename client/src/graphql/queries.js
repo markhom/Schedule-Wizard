@@ -19,7 +19,7 @@ export const GET_USERS = gql`
 // Query to fetch user data for a single user
 //Below is working. Note, 'activities' is excluded
 export const GET_USER = gql`
-query Users($username: String!) {
+query User($username: String!) {
   user(username: $username) {
     _id
     email
@@ -60,7 +60,8 @@ query GetSchedules {
 `;
 
 //Below is to fetch a single schedule by id
-const GET_ONE_SCHEDULE = gql`
+//Below is working, but also doesn't include 'activities'
+export const GET_ONE_SCHEDULE = gql`
 query GetOneSchedule($id: ID!) {
   getOneSchedule(_id: $id) {
     _id
