@@ -37,7 +37,7 @@ const typeDefs = `
     user(username: String!): User 
     me: User
     getSchedules: [Schedule]
-    getOneSchedule(_id: ID!): Schedule
+    getOneSchedule(scheduleId: ID!): Schedule
   }
 
   type Mutation {

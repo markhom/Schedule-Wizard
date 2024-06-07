@@ -4,34 +4,31 @@ import { useQuery } from '@apollo/client';
 import { GET_ONE_SCHEDULE } from '../../graphql/queries';
 
 function ScheduleDetail() {
-    const { scheduleId } = useParams(); 
+    const { scheduleId } = useParams();
     const { loading, error, data } = useQuery(GET_ONE_SCHEDULE, {
-        variables: { id: scheduleId }
+        variables: { scheduleId }
     });
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error loading schedule details: {error.message}</div>;
+    if (!data || !data.getOneSchedule) return <div>No schedule found.</div>;
+
+    const { title, activities } = data.getOneSchedule;
 
     return (
         <div>
             <h1>Schedule Details</h1>
-            {data && (
-                <div>
-                    <h2>{data.schedule.title}</h2>
-                    <ul>
-                        {data.schedule.activities.map(activity => (
-                            <li key={activity._id}>
-                                <h3>{activity.title}</h3>
-                                <p>{activity.startTime} - {activity.endTime}</p>
-                                <p>{activity.description}</p>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
+            <h2>{title}</h2>
+            <ul>
+                {activities && activities.map(activity => (
+                    <li key={activity._id}>
+                        <strong>{activity.title}</strong>: From {activity.startTime} to {activity.endTime}
+                        <p>{activity.description}</p>
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 }
 
-
-export default ScheduleDetail; 
+export default ScheduleDetail;
