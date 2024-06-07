@@ -115,13 +115,19 @@ const resolvers = {
     // },
 
     getSchedules: async () => Schedule.find(),
-
-    getOneSchedule: async (parent, { scheduleId }) => {
-      return Schedule.findOne({ _id: scheduleId });
+    
+    getOneSchedule: async (parent, { scheduleId }, context) => {
+      console.log("Fetching schedule with ID:", scheduleId); // Log incoming schedule ID
+      try {
+        const schedule = await Schedule.findById(scheduleId);
+        console.log("Found schedule:", schedule); // Log the result of the query
+        return schedule;
+      } catch (error) {
+        console.error("Error fetching schedule:", error); // Log if there's an error
+        throw new Error("Failed to fetch schedule.");
+      }
     }
-
   },
-
   // thought: async (parent, { thoughtId }) => {
   //   return Thought.findOne({ _id: thoughtId });
   // },
