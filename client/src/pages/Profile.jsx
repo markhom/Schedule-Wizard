@@ -177,7 +177,7 @@
 
 
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 import { Container, Row, Col, Card, ListGroup, Spinner, Alert } from 'react-bootstrap';
 
@@ -223,10 +223,19 @@ function Profile() {
     return (
         <Container className="mt-5">
             {/* User Profile Information */}
-            <Row>
-                <Col>
-                    <p className='siteText'>Email: {user.email}</p>
-                    <p className ='siteText'>Username: {user.username}</p>
+            <Row className="mb-4">
+                <Col md={{ span: 6, offset: 3 }}>
+                    <Card className="text-center bg-success text-white">
+                        <Card.Header as="h5" className="bg-dark text-white">User Profile</Card.Header>
+                        <Card.Body>
+                            <Card.Text>
+                                <strong>Email:</strong> {user.email}
+                            </Card.Text>
+                            <Card.Text>
+                                <strong>Username:</strong> {user.username}
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
                 </Col>
             </Row>
             {/* Display user's schedules */}
@@ -234,13 +243,11 @@ function Profile() {
                 <Col md={{ span: 8, offset: 2 }}>
                     <h2 className="text-center mb-4 text-success">Your Schedules</h2>
                     {user.schedules.length === 0 ? (
-                        <p className='siteText'>No schedules available</p>
+                        <Alert variant="info">No schedules available</Alert>
                     ) : (
                         user.schedules.map(schedule => (
-                            <Card key={schedule._id}>
-                                <Card.Header>
-                                    <Link to={`/schedules/${schedule._id}`}>{schedule.title}</Link>
-                                </Card.Header>
+                            <Card key={schedule._id} className="mb-3">
+                                <Card.Header as="h5" className="bg-success text-white">{schedule.title}</Card.Header>
                                 <ListGroup variant="flush">
                                     {schedule.activities.map(activity => (
                                         <ListGroup.Item key={activity._id}>{activity.title}</ListGroup.Item>
@@ -256,3 +263,4 @@ function Profile() {
 }
 
 export default Profile;
+
