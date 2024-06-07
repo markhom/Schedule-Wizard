@@ -225,8 +225,6 @@ function Profile() {
     return (
         <Container className="mt-5">
             {/* User Profile Information */}
-
-
             <Row className="mb-4">
                 <Col md={{ span: 6, offset: 3 }}>
                     <Card className="text-center bg-success text-white">
@@ -240,23 +238,10 @@ function Profile() {
                             </Card.Text>
                         </Card.Body>
                     </Card>
-
                 </Col>
             </Row>
             {/* Display user's schedules */}
             <Row>
-
-                <Col>
-                    <h2>Your Schedules</h2>
-                    {userData.schedules.length === 0 ? (
-                        <p className='siteText'>No schedules available</p>
-                    ) : (
-                        userData.schedules.map(schedule => (
-                            <Card key={schedule._id}>
-                                <Card.Header>
-                                    <Link to={`/schedules/${schedule._id}`}>{schedule.title}</Link>
-                                </Card.Header>
-
                 <Col md={{ span: 8, offset: 2 }}>
                     <h2 className="text-center mb-4 text-success">Your Schedules</h2>
                     {userData.schedules.length === 0 ? (
