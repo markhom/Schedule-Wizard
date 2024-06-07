@@ -179,28 +179,30 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
-import { Container, Row, Col, Card, ListGroup, Spinner, Alert } from 'react-bootstrap';
 
-const GET_USER = gql`
-  query GetUser($username: String!) {
-    user(username: $username) {
-      email
-      username
-      schedules {
-        _id
-        title
-        activities {
-          _id
-          title
-        }
-      }
-    }
-  }
-`;
+import { Container, Row, Col, Card, ListGroup } from 'react-bootstrap';
+import { ME } from '../graphql/queries';
+// const GET_USER = gql`
+//   query GetUser($username: String!) {
+//     user(username: $username) {
+//       email
+//       username
+//       schedules {
+//         _id
+//         title
+//         activities {
+//           _id
+//           title
+//         }
+//       }
+//     }
+//   }
+// `;
+
 
 function Profile() {
     const { username } = useParams();  // Get the 'username' parameter from the URL
-    const { loading, error, data, refetch } = useQuery(GET_USER, { variables: { username } });  // Fetch user data with Apollo Client 
+    const { loading, error, data, refetch } = useQuery(ME, { variables: { username } });  // Fetch user data with Apollo Client 
 
     useEffect(() => {
         console.log(`Profile.jsx - username from URL: ${username}`);
@@ -218,36 +220,52 @@ function Profile() {
         </Container>
     );  // Show error message if fetching fails
 
-    const user = data.user;  // Extract user data from query result
-
+    //const user = data.user;  // Extract user data from query result
+    const userData = data?.me || {};
     return (
         <Container className="mt-5">
             {/* User Profile Information */}
+
+
             <Row className="mb-4">
                 <Col md={{ span: 6, offset: 3 }}>
                     <Card className="text-center bg-success text-white">
                         <Card.Header as="h5" className="bg-dark text-white">User Profile</Card.Header>
                         <Card.Body>
                             <Card.Text>
-                                <strong>Email:</strong> {user.email}
+                                <strong>Email:</strong> {userData.email}
                             </Card.Text>
                             <Card.Text>
-                                <strong>Username:</strong> {user.username}
+                                <strong>Username:</strong> {userData.username}
                             </Card.Text>
                         </Card.Body>
                     </Card>
+
                 </Col>
             </Row>
             {/* Display user's schedules */}
             <Row>
+
+                <Col>
+                    <h2>Your Schedules</h2>
+                    {userData.schedules.length === 0 ? (
+                        <p className='siteText'>No schedules available</p>
+                    ) : (
+                        userData.schedules.map(schedule => (
+                            <Card key={schedule._id}>
+                                <Card.Header>
+                                    <Link to={`/schedules/${schedule._id}`}>{schedule.title}</Link>
+                                </Card.Header>
+
                 <Col md={{ span: 8, offset: 2 }}>
                     <h2 className="text-center mb-4 text-success">Your Schedules</h2>
-                    {user.schedules.length === 0 ? (
+                    {userData.schedules.length === 0 ? (
                         <Alert variant="info">No schedules available</Alert>
                     ) : (
-                        user.schedules.map(schedule => (
+                        userData.schedules.map(schedule => (
                             <Card key={schedule._id} className="mb-3">
                                 <Card.Header as="h5" className="bg-success text-white">{schedule.title}</Card.Header>
+
                                 <ListGroup variant="flush">
                                     {schedule.activities.map(activity => (
                                         <ListGroup.Item key={activity._id}>{activity.title}</ListGroup.Item>
