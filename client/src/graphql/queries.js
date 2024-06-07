@@ -62,10 +62,14 @@ query GetSchedules {
 //Below is to fetch a single schedule by id
 //Below is working, but also doesn't include 'activities'
 export const GET_ONE_SCHEDULE = gql`
-query GetOneSchedule($id: ID!) {
-  getOneSchedule(_id: $id) {
+query GetOneSchedule($scheduleId: ID!) {
+  getOneSchedule(scheduleId: $scheduleId) {
     _id
     title
+    activities {
+      _id
+      title
+    }
   }
 }
-    `;
+`;

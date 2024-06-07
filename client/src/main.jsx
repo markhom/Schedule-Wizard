@@ -43,6 +43,10 @@ const router = createBrowserRouter([
         path: 'create-schedule',
         element: <ScheduleCreationPage />
       },
+      {
+        path: 'schedule/:scheduleId',
+        element: <ScheduleDetail />
+      }
       //Need to add in a page for GET_ONE_SCHEDULE below
       // {
       //   path: '',
