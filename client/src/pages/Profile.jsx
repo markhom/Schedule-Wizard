@@ -177,8 +177,9 @@
 
 
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
+
 import { Container, Row, Col, Card, ListGroup } from 'react-bootstrap';
 import { ME } from '../graphql/queries';
 // const GET_USER = gql`
@@ -198,6 +199,7 @@ import { ME } from '../graphql/queries';
 //   }
 // `;
 
+
 function Profile() {
     const { username } = useParams();  // Get the 'username' parameter from the URL
     const { loading, error, data, refetch } = useQuery(ME, { variables: { username } });  // Fetch user data with Apollo Client 
@@ -206,22 +208,44 @@ function Profile() {
         console.log(`Profile.jsx - username from URL: ${username}`);
     }, [username]);
 
-    if (loading) return <div>Loading...</div>;  // Show loading message while data is being fetched
-    if (error) return <div>Error: {error.message}</div>;  // Show error message if fetching fails
+    if (loading) return (
+        <Container className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+            <Spinner animation="border" variant="success" />
+        </Container>
+    );  // Show loading spinner while data is being fetched
+
+    if (error) return (
+        <Container className="mt-5">
+            <Alert variant="danger">Error: {error.message}</Alert>
+        </Container>
+    );  // Show error message if fetching fails
 
     //const user = data.user;  // Extract user data from query result
     const userData = data?.me || {};
     return (
-        <Container>
+        <Container className="mt-5">
             {/* User Profile Information */}
-            <Row>
-                <Col>
-                    <p className='siteText'>Email: {userData.email}</p>
-                    <p className ='siteText'>Username: {userData.username}</p>
+
+
+            <Row className="mb-4">
+                <Col md={{ span: 6, offset: 3 }}>
+                    <Card className="text-center bg-success text-white">
+                        <Card.Header as="h5" className="bg-dark text-white">User Profile</Card.Header>
+                        <Card.Body>
+                            <Card.Text>
+                                <strong>Email:</strong> {userData.email}
+                            </Card.Text>
+                            <Card.Text>
+                                <strong>Username:</strong> {userData.username}
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+
                 </Col>
             </Row>
             {/* Display user's schedules */}
             <Row>
+
                 <Col>
                     <h2>Your Schedules</h2>
                     {userData.schedules.length === 0 ? (
@@ -232,6 +256,16 @@ function Profile() {
                                 <Card.Header>
                                     <Link to={`/schedules/${schedule._id}`}>{schedule.title}</Link>
                                 </Card.Header>
+
+                <Col md={{ span: 8, offset: 2 }}>
+                    <h2 className="text-center mb-4 text-success">Your Schedules</h2>
+                    {userData.schedules.length === 0 ? (
+                        <Alert variant="info">No schedules available</Alert>
+                    ) : (
+                        userData.schedules.map(schedule => (
+                            <Card key={schedule._id} className="mb-3">
+                                <Card.Header as="h5" className="bg-success text-white">{schedule.title}</Card.Header>
+
                                 <ListGroup variant="flush">
                                     {schedule.activities.map(activity => (
                                         <ListGroup.Item key={activity._id}>{activity.title}</ListGroup.Item>
@@ -247,3 +281,4 @@ function Profile() {
 }
 
 export default Profile;
+
