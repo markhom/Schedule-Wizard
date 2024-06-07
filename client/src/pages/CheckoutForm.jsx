@@ -1,64 +1,70 @@
-import React, { useState } from "react";
-// import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import React, { useState } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe('pk_live_51PMJWV089fmhV5vfpwNBOoCSnFL8f5bb6YsfQ45alPgeAo3mqzN73eEEiPWRM5oRDduWnz4OuU23m08OU9ZAeYCv00ChSLZ5d8');
 
 const CheckoutForm = () => {
-    // const stripe = useStripe();
-    // const elements = useElements();
-    const [clientSecret, setClientSecret] = useState('');
-    const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(0);
+  const [errorMessage, setErrorMessage] = useState('');
 
-    // const handleSubmit = async (event) => {
-    //     event.preventDefault();
+  const handleCheckout = async (event) => {
+    event.preventDefault();
 
-    //     if (!stripe || !elements) {
-    //         return;
-    //     }
+    const stripe = await stripePromise;
 
-    //     // Create PaymentIntent on the server
-    //     const response = await fetch('/create-payment-intent', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({ amount }), 
-    //     });
+    try {
+      const response = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Bearer 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`,
+        },
+        body: new URLSearchParams({
+          'payment_method_types[0]': 'card',
+          'line_items[0][price_data][currency]': 'usd',
+          'line_items[0][price_data][product_data][name]': 'Donation',
+          'line_items[0][price_data][unit_amount]': (amount * 100).toString(), // Amount in cents
+          'line_items[0][quantity]': '1',
+          'mode': 'payment',
+          'success_url': window.location.origin + '/success',
+          'cancel_url': window.location.origin + '/cancel',
+        }),
+      });
 
-    //     const data = await response.json();
-    //     setClientSecret(data.clientSecret);
+      const session = await response.json();
 
-    //     // Confirm payment
-    //     const cardElement = elements.getElement(CardElement);
+      if (response.ok) {
+        const { id } = session;
+        const result = await stripe.redirectToCheckout({ sessionId: id });
 
-    //     const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-    //         payment_method: {
-    //             card: cardElement,
-    //         },
-    //     });
+        if (result.error) {
+          setErrorMessage(result.error.message);
+        }
+      } else {
+        setErrorMessage(session.error.message);
+      }
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+  };
 
-    //     if (error) {
-    //         console.error(error);
-    //     } else {
-    //         console.log('PaymentIntent:', paymentIntent);
-    //     }
-    // };
-
-    return (
-        <form >
-            <label>
-                Donation Amount:
-                <input 
-                    type="number" 
-                    value={amount} 
-                    onChange={(e) => setAmount(parseFloat(e.target.value))}
-                    required 
-                />
-            </label>
-            {/* <CardElement /> */}
-            {/* <button type="submit" disabled={!stripe}>
-                Donate Now
-            </button> */}
-        </form>
-    );
+  return (
+    <form onSubmit={handleCheckout}>
+      <label>
+        Donation Amount:
+        <input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          required
+        />
+      </label>
+      {errorMessage && <div>{errorMessage}</div>}
+      <button type="submit">
+        Donate Now
+      </button>
+    </form>
+  );
 };
 
 export default CheckoutForm;
