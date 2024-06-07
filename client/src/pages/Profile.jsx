@@ -180,27 +180,27 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 import { Container, Row, Col, Card, ListGroup } from 'react-bootstrap';
-
-const GET_USER = gql`
-  query GetUser($username: String!) {
-    user(username: $username) {
-      email
-      username
-      schedules {
-        _id
-        title
-        activities {
-          _id
-          title
-        }
-      }
-    }
-  }
-`;
+import { ME } from '../graphql/queries';
+// const GET_USER = gql`
+//   query GetUser($username: String!) {
+//     user(username: $username) {
+//       email
+//       username
+//       schedules {
+//         _id
+//         title
+//         activities {
+//           _id
+//           title
+//         }
+//       }
+//     }
+//   }
+// `;
 
 function Profile() {
     const { username } = useParams();  // Get the 'username' parameter from the URL
-    const { loading, error, data, refetch } = useQuery(GET_USER, { variables: { username } });  // Fetch user data with Apollo Client 
+    const { loading, error, data, refetch } = useQuery(ME, { variables: { username } });  // Fetch user data with Apollo Client 
 
     useEffect(() => {
         console.log(`Profile.jsx - username from URL: ${username}`);
@@ -209,25 +209,25 @@ function Profile() {
     if (loading) return <div>Loading...</div>;  // Show loading message while data is being fetched
     if (error) return <div>Error: {error.message}</div>;  // Show error message if fetching fails
 
-    const user = data.user;  // Extract user data from query result
-
+    //const user = data.user;  // Extract user data from query result
+    const userData = data?.me || {};
     return (
         <Container>
             {/* User Profile Information */}
             <Row>
                 <Col>
-                    <p className='siteText'>Email: {user.email}</p>
-                    <p className ='siteText'>Username: {user.username}</p>
+                    <p className='siteText'>Email: {userData.email}</p>
+                    <p className ='siteText'>Username: {userData.username}</p>
                 </Col>
             </Row>
             {/* Display user's schedules */}
             <Row>
                 <Col>
                     <h2>Your Schedules</h2>
-                    {user.schedules.length === 0 ? (
+                    {userData.schedules.length === 0 ? (
                         <p className='siteText'>No schedules available</p>
                     ) : (
-                        user.schedules.map(schedule => (
+                        userData.schedules.map(schedule => (
                             <Card key={schedule._id}>
                                 <Card.Header>
                                     <Link to={`/schedules/${schedule._id}`}>{schedule.title}</Link>
