@@ -49,7 +49,7 @@ const router = createBrowserRouter([
       {
         path: 'schedule/:scheduleId',
         element: <ScheduleDetail />
-      }
+      },
       //Need to add in a page for GET_ONE_SCHEDULE below
       // {
       //   path: '',
