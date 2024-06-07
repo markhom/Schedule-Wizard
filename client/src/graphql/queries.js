@@ -7,11 +7,18 @@ export const GET_USERS = gql`
   users {
     _id
     email
+    username
     schedules {
       _id
       title
+      activities {
+        _id
+        description
+        endTime
+        startTime
+        title
+      }
     }
-    username
   }
 }
 `;
@@ -23,11 +30,18 @@ query User($username: String!) {
   user(username: $username) {
     _id
     email
+    username
     schedules {
       _id
       title
+      activities {
+        _id
+        description
+        endTime
+        startTime
+        title
+      }
     }
-    username
   }
 }
 `;
@@ -35,15 +49,22 @@ query User($username: String!) {
 //Query to fetch user data for the owner of the acccount
 //Below is working. Note, 'activities' is currently excluded
 export const ME = gql`
-query Query {
+query Me {
   me {
     _id
     email
+    username
     schedules {
       _id
       title
+      activities {
+        _id
+        description
+        endTime
+        startTime
+        title
+      }
     }
-    username
   }
 }
 `;
@@ -55,6 +76,13 @@ query GetSchedules {
   getSchedules {
     _id
     title
+    activities {
+      _id
+      description
+      endTime
+      startTime
+      title
+    }
   }
 }
 `;
@@ -68,6 +96,9 @@ query GetOneSchedule($scheduleId: ID!) {
     title
     activities {
       _id
+      description
+      endTime
+      startTime
       title
     }
   }
