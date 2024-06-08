@@ -97,7 +97,6 @@ const resolvers = {
         },
       });
     },
-
     me: async (parent, args, context) => {
       if (context.user) {
         return User.findOne({ _id: context.user._id }).populate({
@@ -107,76 +106,36 @@ const resolvers = {
           },
         });
       }
-      throw AuthenticationError;
+      throw new AuthenticationError('Not authenticated');
     },
-    //Note: don't need below because calling users will return schedules
-    // userSchedules: async (parent, { userId }) => {
-    //   return Schedule.find({ owner: userId });
-    // },
-
-    getSchedules: async () => Schedule.find(),
-
-    getOneSchedule: async (parent, { scheduleId }, context) => {
-      console.log("Fetching schedule with ID:", scheduleId); // Log incoming schedule ID
-      try {
-        const schedule = await Schedule.findById(scheduleId).populate('activities');
-        console.log("Found schedule:", schedule); // Log the result of the query
-        return schedule;
-      } catch (error) {
-        console.error("Error fetching schedule:", error); // Log if there's an error
-        throw new Error("Failed to fetch schedule.");
-      }
+    getSchedules: async () => Schedule.find().populate('activities'),
+    getOneSchedule: async (parent, { scheduleId }) => {
+      return Schedule.findById(scheduleId).populate('activities');
     },
-
-  // thought: async (parent, { thoughtId }) => {
-  //   return Thought.findOne({ _id: thoughtId });
-  // },
-  //Below are the mutations
-
     searchUsers: async (_, { term }) => {
-      return await User.find({
+      return User.find({
         $or: [
           { username: { $regex: new RegExp(term, 'i') } },
-          { email: { $regex: new RegExp(term, 'i') } }
-        ]
+          { email: { $regex: new RegExp(term, 'i') } },
+        ],
       });
     },
-
     searchSchedules: async (_, { term }) => {
-      return await Schedule.find({
-        title: { $regex: new RegExp(term, 'i') }
-      });
-    }
+      return Schedule.find({
+        title: { $regex: new RegExp(term, 'i') },
+      }).populate('activities');
+    },
   },
-
   Mutation: {
     addUser: async (parent, { username, email, password }) => {
-      // Check if the user already exists
       const existingUser = await User.findOne({ email });
       if (existingUser) {
         throw new Error('A user with this email already exists.');
       }
-      
-        try {
-            const user = await User.create({ username, email, password });
-            const token = signToken(user);
-            return { token, user };
-        } catch (error) {
-            // Log the complete error object and specific details to help diagnose the problem
-            console.error('Error creating user:', error.message);
-            console.error('Error stack:', error.stack); // Provides a stack trace
-    
-            // Optionally, log the input data to understand context (be careful with sensitive data like passwords)
-            console.error('Attempted user creation with email:', email);
-            // Do not log passwords in production environments, it's shown here for debugging purposes only
-            console.error('Attempted user creation with password:', password);
-    
-            throw new Error('Failed to create user. Please check the provided data.');
-          }
-        },
-
-    //Below, note to self: putting 'new' in front of AuthenticationError caused
-    //an error in another spot. Test and see if it needs to be taken out here too
+      const user = await User.create({ username, email, password });
+      const token = signToken(user);
+      return { token, user };
+    },
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
       if (!user) {
@@ -189,59 +148,65 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-
-    addSchedule: async (parent, { title }, context ) => {
-      if (context.user) {
-        const schedule = await Schedule.create({
-          title: title,
-        })
-        const updatedUser = await User.findOneAndUpdate(
-          { _id: context.user._id },
-          { $push: { schedules: schedule._id } },
-          { new: true }
-        );
-        return updatedUser
+    addSchedule: async (parent, { title, activities }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('Not authenticated');
       }
-      throw AuthenticationError;
-    },
-
-    updateSchedule: async (parent, { scheduleId, title }, context) => {
-      const schedule = Schedule.findOneAndUpdate(
-        { _id: context.schedule._id },
+      const schedule = await Schedule.create({ title });
+      if (activities && activities.length > 0) {
+        const activityDocs = await Activity.insertMany(
+          activities.map(activity => ({
+            ...activity,
+            schedule: schedule._id,
+          }))
+        );
+        schedule.activities = activityDocs.map(doc => doc._id);
+        await schedule.save();
+      }
+      await User.findByIdAndUpdate(
+        context.user._id,
         { $push: { schedules: schedule._id } },
-        { new: true },
-      )
-      if (!schedule) {
-        throw AuthenticationError;
-      }
+        { new: true }
+      );
+      return schedule.populate('activities');
     },
-
+    updateSchedule: async (parent, { scheduleId, title }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('Not authenticated');
+      }
+      return Schedule.findByIdAndUpdate(scheduleId, { title }, { new: true }).populate('activities');
+    },
     deleteSchedule: async (parent, { scheduleId }, context) => {
-      if (context.user) {
-        const schedule = await Schedule.findByIdAndRemove(scheduleId);
-        await User.findOneAndUpdate(
-          { _id: context.user._id },
-          { $pull: { schedules: schedule._id } }
-        );
-        return schedule;
+      if (!context.user) {
+        throw new AuthenticationError('Not authenticated');
       }
-      throw AuthenticationError;
+      const schedule = await Schedule.findByIdAndDelete(scheduleId);
+      await User.findByIdAndUpdate(
+        context.user._id,
+        { $pull: { schedules: schedule._id } },
+        { new: true }
+      );
+      return schedule;
     },
-
-    addActivity: async (parent, { scheduleId, activityData }, context) => {
-      // if (context.user) {
-        const activity = await Activity.create(activityData);
-
-        const updatedSchedule = await Schedule.findOneAndUpdate(
-          { _id: scheduleId },
-          { $push: { activities: activity._id } },
-          { new: true }
-        )
-        return updatedSchedule
-      // }
-      // throw AuthenticationError;
-    }
-
+    addActivity: async (parent, { scheduleId, activityData }) => {
+      const activity = await Activity.create(activityData);
+      return Schedule.findByIdAndUpdate(
+        scheduleId,
+        { $push: { activities: activity._id } },
+        { new: true }
+      ).populate('activities');
+    },
+    removeActivity: async (parent, { activityId }) => {
+      const activity = await Activity.findByIdAndDelete(activityId);
+      return Schedule.findOneAndUpdate(
+        { activities: activityId },
+        { $pull: { activities: activityId } },
+        { new: true }
+      ).populate('activities');
+    },
+    updateActivity: async (parent, { activityId, startTime, endTime }) => {
+      return Activity.findByIdAndUpdate(activityId, { startTime, endTime }, { new: true });
+    },
   },
 };
 

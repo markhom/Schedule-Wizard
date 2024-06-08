@@ -13,20 +13,22 @@ function ScheduleDetail() {
     if (error) return <div>Error loading schedule details: {error.message}</div>;
     if (!data || !data.getOneSchedule) return <div>No schedule found.</div>;
 
-    const scheduleData =  data.getOneSchedule || {}
+    const scheduleData = data.getOneSchedule;
+    const activities = scheduleData.activities || [];
 
-   const activities =  data?.getOneSchedule.activities || []
-
-   console.log(activities);
+    const formatTime = (timestamp) => {
+        const date = new Date(parseInt(timestamp));
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    };
 
     return (
         <div>
             <h1>Schedule Details</h1>
             <h2>{scheduleData.title}</h2>
             <ul>
-                {activities && activities.map(activity => (
+                {activities.map(activity => (
                     <li key={activity._id}>
-                        <strong>{activity.title}</strong>: From {activity.startTime} to {activity.endTime}
+                        <strong>{activity.title}</strong>: From {formatTime(activity.startTime)} to {formatTime(activity.endTime)}
                         <p>{activity.description}</p>
                     </li>
                 ))}
