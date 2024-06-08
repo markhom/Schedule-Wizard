@@ -38,6 +38,8 @@ const typeDefs = `
     me: User
     getSchedules: [Schedule]
     getOneSchedule(scheduleId: ID!): Schedule
+    searchUsers(term: String!): [User]
+    searchSchedules(term: String!): [Schedule]
   }
 
   type Mutation {

@@ -246,17 +246,6 @@ function Profile() {
             {/* Display user's schedules */}
             <Row>
 
-                <Col>
-                    <h2>Your Schedules</h2>
-                    {userData.schedules.length === 0 ? (
-                        <p className='siteText'>No schedules available</p>
-                    ) : (
-                        userData.schedules.map(schedule => (
-                            <Card key={schedule._id}>
-                                <Card.Header>
-                                    <Link to={`/schedules/${schedule._id}`}>{schedule.title}</Link>
-                                </Card.Header>
-
                 <Col md={{ span: 8, offset: 2 }}>
                     <h2 className="text-center mb-4 text-success">Your Schedules</h2>
                     {userData.schedules.length === 0 ? (

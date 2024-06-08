@@ -1,8 +1,5 @@
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Elements } from '@stripe/react-stripe-js';
-// import { stripePromise } from './utils/stripe.js'
-import { loadStripe } from '@stripe/stripe-js';
 
 import App from './App.jsx';
 import Home from './pages/Home';
@@ -14,11 +11,9 @@ import CheckoutForm from './pages/CheckoutForm';
 import Schedule from './components/schedules/Schedule.jsx';
 import ScheduleCreationPage from './components/schedules/ScheduleCreationPage.jsx';
 import ScheduleDetail from './components/schedules/ScheduleDetail.jsx';
+import SearchResultsPage from './components/SearchResultsPage'; 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-//Public Stripe Key
-const stripePromise = loadStripe('pk_live_51PMJWV089fmhV5vfpwNBOoCSnFL8f5bb6YsfQ45alPgeAo3mqzN73eEEiPWRM5oRDduWnz4OuU23m08OU9ZAeYCv00ChSLZ5d8');
 
 const router = createBrowserRouter([
   {
@@ -50,21 +45,16 @@ const router = createBrowserRouter([
         path: 'schedule/:scheduleId',
         element: <ScheduleDetail />
       },
+      {
+        path: '/search',
+        element: <SearchResultsPage />
+
+      },
       //Need to add in a page for GET_ONE_SCHEDULE below
       // {
       //   path: '',
       //   element: <></>
       // },
-
-      
-      {
-        path: 'checkout',
-        element: (
-          <Elements stripe={stripePromise}>
-            <CheckoutForm />
-          </Elements>
-        )
-      }
     ]
   },
 ]);

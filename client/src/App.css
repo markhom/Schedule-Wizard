@@ -32,3 +32,29 @@ p {
 .bg-green {
   background-color: #38ed6e;
 }
+.search-bar .form-control {
+  border-radius: 15px;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.search-bar .form-control:focus {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+input, button {
+  outline: none; /* Removes the browser's default focus outline */
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #007bff; /* Custom focus style with a double outline */
+}
+
+
+@media (max-width: 768px) {
+  .search-bar {
+      width: 100%; 
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .search-bar {
+      width: 50%; 
+  }
+}

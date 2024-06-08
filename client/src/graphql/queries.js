@@ -96,9 +96,42 @@ query GetOneSchedule($scheduleId: ID!) {
     title
     activities {
       _id
-      description
-      endTime
+      title
       startTime
+      endTime
+      description
+    }
+  }
+}
+`;
+
+
+//Query for searching users
+export const SEARCH_USERS = gql`
+  query SearchUsers($term: String!) {
+    searchUsers(term: $term) {
+      _id
+      username
+      email
+      schedules {
+        _id
+        title
+      }
+    }
+  }
+`;
+
+// Query for searching schedules
+export const SEARCH_SCHEDULES = gql`
+query SearchSchedules($term: String!) {
+  searchSchedules(term: $term) {
+    _id
+    title
+    activities {
+      _id
+      description
+      startTime
+      endTime
       title
     }
   }
