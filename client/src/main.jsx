@@ -11,6 +11,7 @@ import CheckoutForm from './pages/CheckoutForm';
 import Schedule from './components/schedules/Schedule.jsx';
 import ScheduleCreationPage from './components/schedules/ScheduleCreationPage.jsx';
 import ScheduleDetail from './components/schedules/ScheduleDetail.jsx';
+import SearchResultsPage from './components/SearchResultsPage'; 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -43,6 +44,11 @@ const router = createBrowserRouter([
       {
         path: 'schedule/:scheduleId',
         element: <ScheduleDetail />
+      },
+      {
+        path: '/search',
+        element: <SearchResultsPage />
+
       },
       //Need to add in a page for GET_ONE_SCHEDULE below
       // {

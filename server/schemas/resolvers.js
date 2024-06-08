@@ -126,12 +126,29 @@ const resolvers = {
         console.error("Error fetching schedule:", error); // Log if there's an error
         throw new Error("Failed to fetch schedule.");
       }
-    }
-  },
+    },
+
   // thought: async (parent, { thoughtId }) => {
   //   return Thought.findOne({ _id: thoughtId });
   // },
   //Below are the mutations
+
+    searchUsers: async (_, { term }) => {
+      return await User.find({
+        $or: [
+          { username: { $regex: new RegExp(term, 'i') } },
+          { email: { $regex: new RegExp(term, 'i') } }
+        ]
+      });
+    },
+
+    searchSchedules: async (_, { term }) => {
+      return await Schedule.find({
+        title: { $regex: new RegExp(term, 'i') }
+      });
+    }
+  },
+
   Mutation: {
     addUser: async (parent, { username, email, password }) => {
       // Check if the user already exists
@@ -139,24 +156,24 @@ const resolvers = {
       if (existingUser) {
         throw new Error('A user with this email already exists.');
       }
-
-      try {
-        const user = await User.create({ username, email, password });
-        const token = signToken(user);
-        return { token, user };
-      } catch (error) {
-        // Log the complete error object and specific details to help diagnose the problem
-        console.error('Error creating user:', error.message);
-        console.error('Error stack:', error.stack); // Provides a stack trace
-
-        // Optionally, log the input data to understand context (be careful with sensitive data like passwords)
-        console.error('Attempted user creation with email:', email);
-        // Do not log passwords in production environments, it's shown here for debugging purposes only
-        console.error('Attempted user creation with password:', password);
-
-        throw new Error('Failed to create user. Please check the provided data.');
-      }
-    },
+      
+        try {
+            const user = await User.create({ username, email, password });
+            const token = signToken(user);
+            return { token, user };
+        } catch (error) {
+            // Log the complete error object and specific details to help diagnose the problem
+            console.error('Error creating user:', error.message);
+            console.error('Error stack:', error.stack); // Provides a stack trace
+    
+            // Optionally, log the input data to understand context (be careful with sensitive data like passwords)
+            console.error('Attempted user creation with email:', email);
+            // Do not log passwords in production environments, it's shown here for debugging purposes only
+            console.error('Attempted user creation with password:', password);
+    
+            throw new Error('Failed to create user. Please check the provided data.');
+          }
+        },
 
     //Below, note to self: putting 'new' in front of AuthenticationError caused
     //an error in another spot. Test and see if it needs to be taken out here too
@@ -173,7 +190,7 @@ const resolvers = {
       return { token, user };
     },
 
-    addSchedule: async (parent, { title }, context) => {
+    addSchedule: async (parent, { title }, context ) => {
       if (context.user) {
         const schedule = await Schedule.create({
           title: title,
@@ -201,15 +218,11 @@ const resolvers = {
 
     deleteSchedule: async (parent, { scheduleId }, context) => {
       if (context.user) {
-        const schedule = await Schedule.findByIdAndRemove({ //should this be findOneAndDelete?
-          _id: scheduleId,
-          //Anything else here?
-        });
+        const schedule = await Schedule.findByIdAndRemove(scheduleId);
         await User.findOneAndUpdate(
           { _id: context.user._id },
           { $pull: { schedules: schedule._id } }
         );
-
         return schedule;
       }
       throw AuthenticationError;
