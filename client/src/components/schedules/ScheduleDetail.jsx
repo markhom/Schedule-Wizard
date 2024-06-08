@@ -13,12 +13,16 @@ function ScheduleDetail() {
     if (error) return <div>Error loading schedule details: {error.message}</div>;
     if (!data || !data.getOneSchedule) return <div>No schedule found.</div>;
 
-    const { title, activities } = data.getOneSchedule;
+    const scheduleData =  data.getOneSchedule || {}
+
+   const activities =  data?.getOneSchedule.activities || []
+
+   console.log(activities);
 
     return (
         <div>
             <h1>Schedule Details</h1>
-            <h2>{title}</h2>
+            <h2>{scheduleData.title}</h2>
             <ul>
                 {activities && activities.map(activity => (
                     <li key={activity._id}>

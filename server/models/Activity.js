@@ -8,10 +8,12 @@ const activitySchema = new Schema({
     startTime: {
         type: Date,
         required: true, 
+        default: Date.now
     },
     endTime: {
         type: Date,
-        required: true
+        required: true,
+        default: Date.now
     },
     description: {
         type: String

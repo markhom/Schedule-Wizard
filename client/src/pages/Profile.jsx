@@ -210,7 +210,7 @@ function Profile() {
 
     if (loading) return (
         <Container className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-            <Spinner animation="border" variant="success" />
+            {/* <Spinner animation="border" variant="success" /> */}
         </Container>
     );  // Show loading spinner while data is being fetched
 
@@ -253,7 +253,7 @@ function Profile() {
 
                                 <ListGroup variant="flush">
                                     {schedule.activities.map(activity => (
-                                        <ListGroup.Item key={activity._id}>{activity.title}</ListGroup.Item>
+                                        <ListGroup.Item key={activity._id} >{activity.title}</ListGroup.Item>
                                     ))}
                                 </ListGroup>
                             </Card>

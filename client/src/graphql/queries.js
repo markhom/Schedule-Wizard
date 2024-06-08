@@ -96,10 +96,10 @@ query GetOneSchedule($scheduleId: ID!) {
     title
     activities {
       _id
-      description
-      endTime
-      startTime
       title
+      startTime
+      endTime
+      description
     }
   }
 }

@@ -115,11 +115,11 @@ const resolvers = {
     // },
 
     getSchedules: async () => Schedule.find(),
-    
+
     getOneSchedule: async (parent, { scheduleId }, context) => {
       console.log("Fetching schedule with ID:", scheduleId); // Log incoming schedule ID
       try {
-        const schedule = await Schedule.findById(scheduleId);
+        const schedule = await Schedule.findById(scheduleId).populate('activities');
         console.log("Found schedule:", schedule); // Log the result of the query
         return schedule;
       } catch (error) {
@@ -134,28 +134,28 @@ const resolvers = {
   //Below are the mutations
   Mutation: {
     addUser: async (parent, { username, email, password }) => {
-        // Check if the user already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            throw new Error('A user with this email already exists.');
-        }
-      
-        try {
-            const user = await User.create({ username, email, password });
-            const token = signToken(user);
-            return { token, user };
-        } catch (error) {
-            // Log the complete error object and specific details to help diagnose the problem
-            console.error('Error creating user:', error.message);
-            console.error('Error stack:', error.stack); // Provides a stack trace
+      // Check if the user already exists
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        throw new Error('A user with this email already exists.');
+      }
 
-            // Optionally, log the input data to understand context (be careful with sensitive data like passwords)
-            console.error('Attempted user creation with email:', email);
-            // Do not log passwords in production environments, it's shown here for debugging purposes only
-            console.error('Attempted user creation with password:', password);
+      try {
+        const user = await User.create({ username, email, password });
+        const token = signToken(user);
+        return { token, user };
+      } catch (error) {
+        // Log the complete error object and specific details to help diagnose the problem
+        console.error('Error creating user:', error.message);
+        console.error('Error stack:', error.stack); // Provides a stack trace
 
-            throw new Error('Failed to create user. Please check the provided data.');
-        }
+        // Optionally, log the input data to understand context (be careful with sensitive data like passwords)
+        console.error('Attempted user creation with email:', email);
+        // Do not log passwords in production environments, it's shown here for debugging purposes only
+        console.error('Attempted user creation with password:', password);
+
+        throw new Error('Failed to create user. Please check the provided data.');
+      }
     },
 
     //Below, note to self: putting 'new' in front of AuthenticationError caused
@@ -177,7 +177,6 @@ const resolvers = {
       if (context.user) {
         const schedule = await Schedule.create({
           title: title,
-          //Will Activities need to go here?
         })
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
@@ -189,9 +188,9 @@ const resolvers = {
       throw AuthenticationError;
     },
 
-    updateSchedule: async (parent, { scheduleId, title }, context ) => {
+    updateSchedule: async (parent, { scheduleId, title }, context) => {
       const schedule = Schedule.findOneAndUpdate(
-        { _id: context.schedule._id},
+        { _id: context.schedule._id },
         { $push: { schedules: schedule._id } },
         { new: true },
       )
@@ -200,7 +199,7 @@ const resolvers = {
       }
     },
 
-    deleteSchedule: async (parent, { scheduleId }, context ) => {
+    deleteSchedule: async (parent, { scheduleId }, context) => {
       if (context.user) {
         const schedule = await Schedule.findByIdAndRemove({ //should this be findOneAndDelete?
           _id: scheduleId,
@@ -214,7 +213,22 @@ const resolvers = {
         return schedule;
       }
       throw AuthenticationError;
-    } 
+    },
+
+    addActivity: async (parent, { scheduleId, activityData }, context) => {
+      // if (context.user) {
+        const activity = await Activity.create(activityData);
+
+        const updatedSchedule = await Schedule.findOneAndUpdate(
+          { _id: scheduleId },
+          { $push: { activities: activity._id } },
+          { new: true }
+        )
+        return updatedSchedule
+      // }
+      // throw AuthenticationError;
+    }
+
   },
 };
 
