@@ -205,7 +205,7 @@ const resolvers = {
       throw AuthenticationError;
     },
 
-    updateSchedule: async (parent, { scheduleId, title }, context ) => {
+    updateSchedule: async (parent, { scheduleId, title }, context) => {
       const schedule = Schedule.findOneAndUpdate(
         { _id: context.schedule._id },
         { $push: { schedules: schedule._id } },
@@ -216,7 +216,7 @@ const resolvers = {
       }
     },
 
-    deleteSchedule: async (parent, { scheduleId }, context ) => {
+    deleteSchedule: async (parent, { scheduleId }, context) => {
       if (context.user) {
         const schedule = await Schedule.findByIdAndRemove(scheduleId);
         await User.findOneAndUpdate(

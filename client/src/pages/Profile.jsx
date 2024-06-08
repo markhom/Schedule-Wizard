@@ -210,7 +210,7 @@ function Profile() {
 
     if (loading) return (
         <Container className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-            <Spinner animation="border" variant="success" />
+            {/* <Spinner animation="border" variant="success" /> */}
         </Container>
     );  // Show loading spinner while data is being fetched
 
@@ -225,8 +225,6 @@ function Profile() {
     return (
         <Container className="mt-5">
             {/* User Profile Information */}
-
-
             <Row className="mb-4">
                 <Col md={{ span: 6, offset: 3 }}>
                     <Card className="text-center bg-success text-white">
@@ -240,12 +238,10 @@ function Profile() {
                             </Card.Text>
                         </Card.Body>
                     </Card>
-
                 </Col>
             </Row>
             {/* Display user's schedules */}
             <Row>
-
                 <Col md={{ span: 8, offset: 2 }}>
                     <h2 className="text-center mb-4 text-success">Your Schedules</h2>
                     {userData.schedules.length === 0 ? (
@@ -257,7 +253,7 @@ function Profile() {
 
                                 <ListGroup variant="flush">
                                     {schedule.activities.map(activity => (
-                                        <ListGroup.Item key={activity._id}>{activity.title}</ListGroup.Item>
+                                        <ListGroup.Item key={activity._id} >{activity.title}</ListGroup.Item>
                                     ))}
                                 </ListGroup>
                             </Card>
