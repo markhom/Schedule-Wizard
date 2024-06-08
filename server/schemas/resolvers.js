@@ -1,7 +1,7 @@
 const { User, Schedule, Activity } = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { signToken, AuthenticationError } = require('../auth/auth');
+const { signToken } = require('../auth/auth');const { AuthenticationError } = require('apollo-server-express');
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
@@ -205,17 +205,21 @@ const resolvers = {
       }
       return Schedule.findByIdAndUpdate(scheduleId, { title }, { new: true }).populate('activities');
     },
-    deleteSchedule: async (parent, { scheduleId }, context) => {
+    deleteSchedule: async (parent, { scheduleId, userId }, context) => {
       if (!context.user) {
         throw new AuthenticationError('Not authenticated');
       }
       const schedule = await Schedule.findByIdAndDelete(scheduleId);
+      if (!schedule) {
+        throw new Error('Schedule not found');
+      }
       await User.findByIdAndUpdate(
-        context.user._id,
+        userId,
         { $pull: { schedules: schedule._id } },
         { new: true }
       );
-      return schedule;
+      const user = await User.findById(userId).populate('schedules');
+      return user;
     },
     addActivity: async (parent, { scheduleId, activityData }) => {
       const activity = await Activity.create(activityData);

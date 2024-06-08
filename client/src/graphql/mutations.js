@@ -71,61 +71,65 @@ mutation UpdateSchedule($scheduleId: ID!, $title: String!) {
 // Mutation to delete a schedule
 //Below is tested and works. Note, it also excludes 'activities' for now
 export const DELETE_SCHEDULE = gql`
-mutation DeleteSchedule($scheduleId: ID!) {
-  deleteSchedule(scheduleId: $scheduleId) {
+mutation DeleteSchedule($scheduleId: ID!, $userId: ID!) {
+  deleteSchedule(scheduleId: $scheduleId, userId: $userId) {
     _id
+    username
     email
     schedules {
       _id
       title
     }
-    username
   }
 }
 `;
+
 
 //Tested and working
 export const ADD_ACTIVITY = gql`
-mutation AddActivity($scheduleId: ID, $activityData: ActivityInput) {
+mutation AddActivity($scheduleId: ID!, $activityData: ActivityInput!) {
   addActivity(scheduleId: $scheduleId, activityData: $activityData) {
     _id
+    title
     activities {
       _id
-      description
-      endTime
-      startTime
       title
+      startTime
+      endTime
+      description
+      day
     }
-    title
   }
 }
 `;
-
 //Tested and working
 export const REMOVE_ACTIVITY = gql`
-mutation RemoveActivity($activityId: ID) {
+mutation RemoveActivity($activityId: ID!) {
   removeActivity(activityId: $activityId) {
     _id
     title
     activities {
       _id
-      description
-      endTime
-      startTime
       title
+      startTime
+      endTime
+      description
+      day
     }
   }
 }
 `;
 
+
 export const UPDATE_ACTIVITY = gql`
-mutation UpdateActivity($activityId: ID, $startTime: String, $endTime: String) {
-  updateActivity(activityId: $activityId, startTime: $startTime, endTime: $endTime) {
+mutation UpdateActivity($activityId: ID!, $startTime: String, $endTime: String, $title: String, $description: String, $day: String) {
+  updateActivity(activityId: $activityId, startTime: $startTime, endTime: $endTime, title: $title, description: $description, day: $day) {
     _id
-    description
-    endTime
-    startTime
     title
+    startTime
+    endTime
+    description
+    day
   }
 }
 `;
