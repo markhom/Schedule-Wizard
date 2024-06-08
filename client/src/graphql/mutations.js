@@ -43,6 +43,7 @@ mutation AddSchedule($title: String!, $activities: [ActivityInput]) {
       description
       startTime
       endTime
+      day
     }
   }
 }
