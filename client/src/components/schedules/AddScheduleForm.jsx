@@ -14,7 +14,8 @@ function AddScheduleForm({ user }) {
         title: '',
         startTime: '',
         endTime: '',
-        description: ''
+        description: '',
+        day: '' // Add day field to each activity
       }))
     )
   );
@@ -28,7 +29,6 @@ function AddScheduleForm({ user }) {
       return;
     }
 
-    // Manually parse the time strings into Date objects
     const formattedActivities = activities.flat().filter(activity => activity.title && activity.startTime && activity.endTime).map(activity => ({
       ...activity,
       startTime: parseTime(activity.startTime),
@@ -46,8 +46,7 @@ function AddScheduleForm({ user }) {
       console.log('Schedule created successfully:', data);
       alert('Schedule created successfully!');
       setTitle('');
-      // Reset activities
-      setActivities(Array.from({ length: 7 }, () => Array(17).fill({ title: '', startTime: '', endTime: '', description: '' })));
+      setActivities(Array.from({ length: 7 }, () => Array(17).fill({ title: '', startTime: '', endTime: '', description: '', day: '' })));
     } catch (error) {
       console.error('Error creating schedule:', error);
       if (error.graphQLErrors) {
@@ -60,7 +59,6 @@ function AddScheduleForm({ user }) {
     }
   };
 
-  // Function to parse time strings into Date objects
   const parseTime = (timeString) => {
     const [hours, minutes] = timeString.split(':').map(Number);
     const now = new Date();
@@ -68,14 +66,15 @@ function AddScheduleForm({ user }) {
     now.setMinutes(minutes);
     now.setSeconds(0);
     now.setMilliseconds(0);
-    return now;
+    console.log("Parsed time:", now); // Debug statement
+    return now.toISOString();
   };
 
   const handleActivityChange = (dayIndex, hourIndex, field, value) => {
     const updatedActivities = activities.map((day, idx) =>
       idx === dayIndex
         ? day.map((activity, hIdx) =>
-            hIdx === hourIndex ? { ...activity, [field]: value } : activity
+            hIdx === hourIndex ? { ...activity, [field]: value, day: daysOfWeek[dayIndex] } : activity
           )
         : day
     );
@@ -145,4 +144,3 @@ function AddScheduleForm({ user }) {
 }
 
 export default AddScheduleForm;
-

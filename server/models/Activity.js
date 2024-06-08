@@ -17,6 +17,10 @@ const activitySchema = new Schema({
     },
     description: {
         type: String
+    },
+    day: {
+        type: String,
+        required: true
     }
 });
 

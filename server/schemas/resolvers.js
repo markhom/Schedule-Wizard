@@ -150,25 +150,54 @@ const resolvers = {
     },
     addSchedule: async (parent, { title, activities }, context) => {
       if (!context.user) {
-        throw new AuthenticationError('Not authenticated');
+        console.error("Authentication error: User must be logged in to create schedules.");
+        throw new AuthenticationError("User must be authenticated to create schedules.");
       }
-      const schedule = await Schedule.create({ title });
-      if (activities && activities.length > 0) {
-        const activityDocs = await Activity.insertMany(
-          activities.map(activity => ({
-            ...activity,
-            schedule: schedule._id,
-          }))
+
+      try {
+        console.log("Creating new schedule with title:", title);
+        const schedule = await Schedule.create({ title });
+        console.log("Schedule created with ID:", schedule._id);
+
+        if (activities && activities.length > 0) {
+          console.log("Inserting activities:", activities);
+          const activityDocs = await Activity.insertMany(
+            activities.map(activity => ({
+              ...activity,
+              startTime: new Date(activity.startTime), // Ensure date is correctly parsed
+              endTime: new Date(activity.endTime), // Ensure date is correctly parsed
+              schedule: schedule._id
+            }))
+          );
+
+          if (activityDocs.length) {
+            const activityIds = activityDocs.map(doc => doc._id);
+            console.log("Activities created with IDs:", activityIds);
+            await Schedule.findByIdAndUpdate(schedule._id, { $set: { activities: activityIds } });
+            console.log("Schedule updated with activity IDs:", schedule._id);
+          } else {
+            console.log("No activities were created, check input data and model constraints.");
+          }
+        } else {
+          console.log("No activities provided to insert.");
+        }
+
+        console.log("Linking schedule to user:", context.user._id);
+        await User.findByIdAndUpdate(
+          context.user._id,
+          { $push: { schedules: schedule._id } },
+          { new: true }
         );
-        schedule.activities = activityDocs.map(doc => doc._id);
-        await schedule.save();
+
+        console.log("Fetching the complete schedule to return.");
+        const populatedSchedule = await Schedule.findById(schedule._id).populate('activities');
+        console.log("Returning populated schedule:", populatedSchedule);
+
+        return populatedSchedule;
+      } catch (error) {
+        console.error("Error creating schedule:", error);
+        throw new Error("Failed to create schedule due to an error.");
       }
-      await User.findByIdAndUpdate(
-        context.user._id,
-        { $push: { schedules: schedule._id } },
-        { new: true }
-      );
-      return schedule.populate('activities');
     },
     updateSchedule: async (parent, { scheduleId, title }, context) => {
       if (!context.user) {
