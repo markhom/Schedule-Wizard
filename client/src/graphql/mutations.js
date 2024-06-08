@@ -33,17 +33,21 @@ mutation AddUser($username: String!, $email: String!, $password: String!) {
 // Mutation to add a new schedule
 //Below is tested and finalized, although we'll need to add 'activities' when ready
 export const ADD_SCHEDULE = gql`
-mutation AddSchedule($title: String!) {
-  addSchedule(title: $title) {
+mutation AddSchedule($title: String!, $activities: [ActivityInput]) {
+  addSchedule(title: $title, activities: $activities) {
     _id
-    schedules {
+    title
+    activities {
       _id
       title
+      description
+      startTime
+      endTime
     }
-    username
   }
 }
 `;
+
 
 // Mutation to update an existing schedule
 //Below is working. Note, it excludes 'activities' for now
