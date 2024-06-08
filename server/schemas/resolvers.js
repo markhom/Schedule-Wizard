@@ -108,7 +108,7 @@ const resolvers = {
       }
       throw new AuthenticationError('Not authenticated');
     },
-    getSchedules: async () => Schedule.find().populate('activities'),
+    getSchedules: async () => Schedule.find(),
     getOneSchedule: async (parent, { scheduleId }) => {
       return Schedule.findById(scheduleId).populate('activities');
     },
@@ -223,7 +223,7 @@ const resolvers = {
         scheduleId,
         { $push: { activities: activity._id } },
         { new: true }
-      ).populate('activities');
+      );
     },
     removeActivity: async (parent, { activityId }) => {
       const activity = await Activity.findByIdAndDelete(activityId);

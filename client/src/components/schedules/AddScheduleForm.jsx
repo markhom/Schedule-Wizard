@@ -34,6 +34,7 @@ function AddScheduleForm({ user }) {
       startTime: parseTime(activity.startTime),
       endTime: parseTime(activity.endTime)
     }));
+    
     console.log("Formatted activities being submitted:", formattedActivities);
 
     try {
@@ -44,7 +45,9 @@ function AddScheduleForm({ user }) {
         },
       });
       console.log('Schedule created successfully:', data);
-      alert('Schedule created successfully!');
+       document.location.replace('/')
+      
+      // Reset activities
       setTitle('');
       setActivities(Array.from({ length: 7 }, () => Array(17).fill({ title: '', startTime: '', endTime: '', description: '', day: '' })));
     } catch (error) {
@@ -78,6 +81,7 @@ function AddScheduleForm({ user }) {
           )
         : day
     );
+  
     setActivities(updatedActivities);
   };
 

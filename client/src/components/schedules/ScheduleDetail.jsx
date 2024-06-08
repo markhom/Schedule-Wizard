@@ -17,7 +17,7 @@ function ScheduleDetail() {
   const activities = scheduleData.activities || [];
 
   const formatTime = (timestamp) => {
-    const date = new Date(parseInt(timestamp));
+    const date = new Date(parseInt(timestamp) * 1000);
     console.log("Formatted time:", date); // Debug statement
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
