@@ -116,3 +116,15 @@ mutation RemoveActivity($activityId: ID) {
   }
 }
 `;
+
+export const UPDATE_ACTIVITY = gql`
+mutation UpdateActivity($activityId: ID, $startTime: String, $endTime: String) {
+  updateActivity(activityId: $activityId, startTime: $startTime, endTime: $endTime) {
+    _id
+    description
+    endTime
+    startTime
+    title
+  }
+}
+`;
