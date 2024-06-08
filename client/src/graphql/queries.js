@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 //Query to fetch all users
-//Below is working. Note, 'activities' is excluded
+
 export const GET_USERS = gql`
  query Users {
   users {
@@ -24,7 +24,7 @@ export const GET_USERS = gql`
 `;
 
 // Query to fetch user data for a single user
-//Below is working. Note, 'activities' is excluded
+
 export const GET_USER = gql`
 query User($username: String!) {
   user(username: $username) {
@@ -47,7 +47,7 @@ query User($username: String!) {
 `;
 
 //Query to fetch user data for the owner of the acccount
-//Below is working. Note, 'activities' is currently excluded
+
 export const ME = gql`
 query Me {
   me {
@@ -70,7 +70,7 @@ query Me {
 `;
 
 // Query to fetch all schedules
-//Below is working. Again. include 'activities'
+
 export const GET_SCHEDULES = gql`
 query GetSchedules {
   getSchedules {
@@ -88,7 +88,7 @@ query GetSchedules {
 `;
 
 //Below is to fetch a single schedule by id
-//Below is working, but also doesn't include 'activities'
+
 export const GET_ONE_SCHEDULE = gql`
 query GetOneSchedule($scheduleId: ID!) {
   getOneSchedule(scheduleId: $scheduleId) {
