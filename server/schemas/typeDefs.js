@@ -46,7 +46,7 @@ const typeDefs = `
     addSchedule(title: String!): User
     updateSchedule(scheduleId: ID!, title: String!): User
     deleteSchedule(scheduleId: ID!): User  
-    addActivity(activityData: ActivityInput): Schedule
+    addActivity(scheduleId: ID, activityData: ActivityInput): Schedule
     removeActivity(activityId: ID): Schedule
     updateActivity(activityId: ID, startTime: String, endTime: String ): Activity
   }
