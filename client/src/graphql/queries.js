@@ -63,6 +63,7 @@ query Me {
         endTime
         startTime
         title
+        day
       }
     }
   }
@@ -82,6 +83,7 @@ query GetSchedules {
       endTime
       startTime
       title
+      day
     }
   }
 }
@@ -100,6 +102,7 @@ query GetOneSchedule($scheduleId: ID!) {
       startTime
       endTime
       description
+      day
     }
   }
 }
@@ -133,6 +136,7 @@ query SearchSchedules($term: String!) {
       startTime
       endTime
       title
+      day
     }
   }
 }
