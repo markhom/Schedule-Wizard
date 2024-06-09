@@ -1,7 +1,7 @@
 const { User, Schedule, Activity } = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { signToken } = require('../auth/auth');const { AuthenticationError } = require('apollo-server-express');
+const { signToken, AuthenticationError } = require('../auth/auth');
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
