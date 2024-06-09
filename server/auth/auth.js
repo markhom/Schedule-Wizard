@@ -19,7 +19,7 @@ module.exports = {
     }
 
     if (!token) {
-      return req;
+      throw new AuthenticationError('You must be logged in.');
     }
 
     // if token can be verified, add the decoded user's data to the request so it can be accessed in the resolver
@@ -27,7 +27,7 @@ module.exports = {
       const { data } = jwt.verify(token, secret, { maxAge: expiration });
       req.user = data;
     } catch {
-       console.log('Invalid token');
+      throw new AuthenticationError('Invalid or expired token');
     }
 
     // return the request object so it can be passed to the resolver as `context`
