@@ -49,7 +49,7 @@ const typeDefs = `
     login(email: String!, password: String!): Auth
     addSchedule(title: String!, activities: [ActivityInput]): Schedule  
     updateSchedule(scheduleId: ID!, title: String!): Schedule  
-    deleteSchedule(scheduleId: ID!): Schedule 
+    deleteSchedule(scheduleId: ID!, userId: ID!): User 
     addActivity(scheduleId: ID, activityData: ActivityInput): Schedule
     removeActivity(activityId: ID): Schedule
     updateActivity(activityId: ID, startTime: String, endTime: String): Activity
