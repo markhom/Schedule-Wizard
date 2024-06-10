@@ -8,6 +8,7 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { Outlet } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
 
 //import { AuthProvider } from './auth/AuthContext'; 
 import Header from './components/Header';
@@ -41,15 +42,19 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-     {/* <AuthProvider>  AuthProvider wraps all components that need auth state */}
-        <div className="flex-column justify-flex-start min-100-vh">
-          <Header />
-          <Navbar /> {/* Navbar can now use the context for authentication */}
+      {/* <AuthProvider>  AuthProvider wraps all components that need auth state */}
+      <div className="flex-column justify-flex-start min-100-vh">
+        <Header />
+        <Navbar /> {/* Navbar can now use the context for authentication */}
+
+        <Container className="main-content" >
           <div className="container">
             <Outlet /> {/* Used for rendering child components */}
           </div>
-          <Footer />
-        </div>
+        </Container>
+
+        <Footer />
+      </div>
       {/* </AuthProvider> */}
     </ApolloProvider>
   );
