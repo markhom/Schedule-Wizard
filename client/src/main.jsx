@@ -55,6 +55,10 @@ const router = createBrowserRouter([
         path: '/update/:scheduleId',
         element: <Update />
       },
+      {
+        path: 'profile/:username',
+        element: <Profile />
+      }
       //Need to add in a page for GET_ONE_SCHEDULE below
       // {
       //   path: '',
