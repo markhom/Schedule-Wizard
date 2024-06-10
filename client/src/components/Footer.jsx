@@ -22,7 +22,7 @@ function Footer() {
             <Row>
 
                 <Col xs={10} className="">
-                    <p class="text-center" > © 2024 ScheduleWizard. All rights reserved.</p>
+                    <p className="text-center" > © 2024 ScheduleWizard. All rights reserved.</p>
                 </Col>
 
                 <Col xs={2}>

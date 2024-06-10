@@ -92,7 +92,7 @@ query GetSchedules {
 //Below is to fetch a single schedule by id
 
 export const GET_ONE_SCHEDULE = gql`
-query GetOneSchedule($scheduleId: ID!) {
+query getOneSchedule($scheduleId: ID!) {
   getOneSchedule(scheduleId: $scheduleId) {
     _id
     title
@@ -102,7 +102,6 @@ query GetOneSchedule($scheduleId: ID!) {
       startTime
       endTime
       description
-      day
     }
   }
 }

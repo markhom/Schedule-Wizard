@@ -2,25 +2,29 @@ import './Profile.css';
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
-import { Container, Row, Col, Card, ListGroup, Button, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Card, ListGroup, Button, Alert, Form, FormGroup } from 'react-bootstrap';
 import { ME } from '../graphql/queries';
 import { DELETE_SCHEDULE } from '../graphql/mutations';
+// import { UPDATE_SCHEDULES } from '../graphql/mutations';
 
 
 function Profile() {
-    const { username } = useParams();
-    const { loading, error, data, refetch } = useQuery(ME, { variables: { username } });
+  
+    const { loading, error, data, refetch } = useQuery(ME);
     const [deleteSchedule] = useMutation(DELETE_SCHEDULE, {
         onCompleted: () => refetch(),
         onError: (error) => console.error('Error deleting schedule:', error)
     });
 
+    // const [updateSchedule] = useMutation( UPDATE_SCHEDULE)
+
     const [showNotification, setShowNotification] = useState(false);
+   
     const [notificationMessage, setNotificationMessage] = useState('');
 
-    useEffect(() => {
-        console.log(`Profile.jsx - username from URL: ${username}`);
-    }, [username]);
+    // useEffect(() => {
+    //     console.log(`Profile.jsx - username from URL: ${username}`);
+    // }, [username]);
 
     if (loading) return (
         <Container className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
@@ -49,6 +53,14 @@ function Profile() {
             setTimeout(() => setShowNotification(false), 3000);
         }
     };
+
+    const handleUpdate = async (scheduleId) => {
+        try {
+
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     return (
         <Container className="mt-5">
@@ -81,9 +93,18 @@ function Profile() {
                         userData.schedules.map(schedule => (
                             <Card key={schedule._id} className="mb-3">
                                 <Card.Header as="h5" className="bg-success text-white d-flex justify-content-between align-items-center">
+                                    
                                     <Link to={`/schedule/${schedule._id}`} className="text-white">
                                         {schedule.title}
                                     </Link>
+                                
+                                    
+                                    <Button 
+                                    variant="info" 
+                                    onClick={()=> {
+                                        document.location.replace(`/update/${schedule._id}`)
+                                    }}
+                                    >Update</Button>
                                     <Button variant="danger" onClick={() => handleDelete(schedule._id)}>Delete</Button>
                                 </Card.Header>
                                 <ListGroup variant="flush">
