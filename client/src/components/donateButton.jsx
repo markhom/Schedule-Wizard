@@ -3,7 +3,6 @@ import { Button } from 'react-bootstrap';
 import { loadStripe } from "@stripe/stripe-js";
 const stripePromise = loadStripe('pk_live_51PMJWV089fmhV5vfpwNBOoCSnFL8f5bb6YsfQ45alPgeAo3mqzN73eEEiPWRM5oRDduWnz4OuU23m08OU9ZAeYCv00ChSLZ5d8');
 
-
 const DonationButton = ({ itemID, ammount }) => {
   const handleClick = async (event) => {
     const stripe = await stripePromise;
@@ -22,7 +21,7 @@ const DonationButton = ({ itemID, ammount }) => {
       });
   };
   return (
-    <Button className="animated-button justify-content-end mb-3" variant="primary" onClick={handleClick}>
+    <Button className="animated-button justify-content-end mb-3" variant="success" onClick={handleClick}>
       Donate {ammount}$
     </Button>
   );
