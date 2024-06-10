@@ -53,16 +53,17 @@ mutation AddSchedule($title: String!, $activities: [ActivityInput]) {
 // Mutation to update an existing schedule
 
 export const UPDATE_SCHEDULE = gql`
-mutation UpdateSchedule($scheduleId: ID!, $title: String!) {
+mutation updateSchedule($scheduleId: ID!, $title: String!) {
   updateSchedule(scheduleId: $scheduleId, title: $title) {
     _id
     title
     activities {
       _id
-      description
-      endTime
-      startTime
       title
+      startTime
+      endTime
+      description
+      day
     }
   }
 }
@@ -133,3 +134,5 @@ mutation UpdateActivity($activityId: ID!, $startTime: String, $endTime: String, 
   }
 }
 `;
+
+

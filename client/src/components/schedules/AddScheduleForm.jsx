@@ -106,6 +106,7 @@ function AddScheduleForm({ user }) {
         {selectedDay !== null && (
           <div>
             {activities[selectedDay].map((activity, hourIndex) => (
+
               <Row key={hourIndex}>
                 <Col>
                   <Form.Control
@@ -138,10 +139,11 @@ function AddScheduleForm({ user }) {
                   />
                 </Col>
               </Row>
+              
             ))}
           </div>
         )}
-        <Button type="submit">Create Schedule</Button>
+        <Button type="submit" variant="warning">Create Schedule</Button>
       </Form>
     </Container>
   );
