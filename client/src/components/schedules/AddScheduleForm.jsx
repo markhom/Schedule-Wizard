@@ -45,7 +45,7 @@ function AddScheduleForm({ user }) {
         },
       });
       console.log('Schedule created successfully:', data);
-       document.location.replace('/')
+      document.location.replace('/');
       
       // Reset activities
       setTitle('');
@@ -87,63 +87,81 @@ function AddScheduleForm({ user }) {
 
   return (
     <Container fluid>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} className="p-4">
         <Form.Group className="mb-3">
-          <Form.Label>Schedule Title</Form.Label>
+          <Form.Label className="h4" style={{ color: 'green' }}>Schedule Title</Form.Label>
           <Form.Control
             type="text"
             placeholder="Enter schedule title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
+            style={{ fontSize: '14px' }}
           />
         </Form.Group>
-        {daysOfWeek.map((day, dayIndex) => (
-          <Button key={day} onClick={() => setSelectedDay(dayIndex)}>
-            {day}
-          </Button>
-        ))}
+        <div className="d-flex flex-wrap justify-content-center mb-2">
+          {daysOfWeek.map((day, dayIndex) => (
+            <div key={dayIndex} className="p-1">
+              <Button
+                variant={selectedDay === dayIndex ? 'success' : 'secondary'}
+                onClick={() => setSelectedDay(dayIndex)}
+                className="animated-button"
+                style={{ minWidth: '150px', padding: '10px' }}
+              >
+                {day}
+              </Button>
+            </div>
+          ))}
+        </div>
         {selectedDay !== null && (
-          <div>
-            {activities[selectedDay].map((activity, hourIndex) => (
-
-              <Row key={hourIndex}>
-                <Col>
-                  <Form.Control
-                    type="text"
-                    placeholder="Activity Title"
-                    value={activity.title}
-                    onChange={(e) => handleActivityChange(selectedDay, hourIndex, 'title', e.target.value)}
-                  />
-                </Col>
-                <Col>
-                  <Form.Control
-                    type="time"
-                    value={activity.startTime}
-                    onChange={(e) => handleActivityChange(selectedDay, hourIndex, 'startTime', e.target.value)}
-                  />
-                </Col>
-                <Col>
-                  <Form.Control
-                    type="time"
-                    value={activity.endTime}
-                    onChange={(e) => handleActivityChange(selectedDay, hourIndex, 'endTime', e.target.value)}
-                  />
-                </Col>
-                <Col>
-                  <Form.Control
-                    type="text"
-                    placeholder="Description"
-                    value={activity.description}
-                    onChange={(e) => handleActivityChange(selectedDay, hourIndex, 'description', e.target.value)}
-                  />
-                </Col>
-              </Row>
-              
-            ))}
-          </div>
+          <Row>
+            <Col>
+              <div className="mt-2">
+                {activities[selectedDay].map((activity, hourIndex) => (
+                  <Row key={hourIndex} className="mb-2">
+                    <Col xs={3}>
+                      <Form.Control
+                        type="text"
+                        placeholder="Activity Title"
+                        value={activity.title}
+                        onChange={(e) => handleActivityChange(selectedDay, hourIndex, 'title', e.target.value)}
+                        style={{ fontSize: '12px' }}
+                      />
+                    </Col>
+                    <Col xs={3}>
+                      <Form.Control
+                        type="time"
+                        value={activity.startTime}
+                        onChange={(e) => handleActivityChange(selectedDay, hourIndex, 'startTime', e.target.value)}
+                        style={{ fontSize: '12px' }}
+                      />
+                    </Col>
+                    <Col xs={3}>
+                      <Form.Control
+                        type="time"
+                        value={activity.endTime}
+                        onChange={(e) => handleActivityChange(selectedDay, hourIndex, 'endTime', e.target.value)}
+                        style={{ fontSize: '12px' }}
+                      />
+                    </Col>
+                    <Col xs={3}>
+                      <Form.Control
+                        type="text"
+                        placeholder="Description"
+                        value={activity.description}
+                        onChange={(e) => handleActivityChange(selectedDay, hourIndex, 'description', e.target.value)}
+                        style={{ fontSize: '12px' }}
+                      />
+                    </Col>
+                  </Row>
+                ))}
+              </div>
+            </Col>
+          </Row>
         )}
-        <Button type="submit" variant="warning">Create Schedule</Button>
+        <div className="text-center mt-3">
+          <Button type="submit" variant="success" className="animated-button" style={{ padding: '10px 20px' }}>Create Schedule</Button>
+        </div>
       </Form>
     </Container>
   );
