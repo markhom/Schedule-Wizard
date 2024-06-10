@@ -1,3 +1,4 @@
+import './Profile.css';
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
@@ -5,16 +6,17 @@ import { Container, Row, Col, Card, ListGroup, Button, Alert } from 'react-boots
 import { ME } from '../graphql/queries';
 import { DELETE_SCHEDULE } from '../graphql/mutations';
 
+
 function Profile() {
     const { username } = useParams();
     const { loading, error, data, refetch } = useQuery(ME, { variables: { username } });
     const [deleteSchedule] = useMutation(DELETE_SCHEDULE, {
-        onCompleted: (data) => {
-            console.log('Deleted schedule and fetched updated user:', data);
-            refetch();
-        },
+        onCompleted: () => refetch(),
         onError: (error) => console.error('Error deleting schedule:', error)
     });
+
+    const [showNotification, setShowNotification] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState('');
 
     useEffect(() => {
         console.log(`Profile.jsx - username from URL: ${username}`);
@@ -37,15 +39,24 @@ function Profile() {
     const handleDelete = async (scheduleId) => {
         try {
             await deleteSchedule({ variables: { scheduleId, userId: userData._id } });
-            alert('Schedule deleted successfully');
+            setNotificationMessage('Schedule deleted successfully');
+            setShowNotification(true);
+            setTimeout(() => setShowNotification(false), 3000);
         } catch (error) {
             console.error('Error deleting schedule:', error);
-            alert('Failed to delete schedule');
+            setNotificationMessage('Failed to delete schedule');
+            setShowNotification(true);
+            setTimeout(() => setShowNotification(false), 3000);
         }
     };
 
     return (
         <Container className="mt-5">
+            {showNotification && (
+                <Alert variant="success" className="fixed-alert" onClose={() => setShowNotification(false)} dismissible>
+                    {notificationMessage}
+                </Alert>
+            )}
             <Row className="mb-4">
                 <Col md={{ span: 6, offset: 3 }}>
                     <Card className="text-center bg-success text-white">
