@@ -53,7 +53,7 @@ function Header() {
             placeholder="Search users or schedules..."
             value={searchTerm}
             onChange={(e) => {
-              console.log("Search term updated to:", e.target.value);
+              //console.log("Search term updated to:", e.target.value);
               setSearchTerm(e.target.value);
             }}
             className="me-2"

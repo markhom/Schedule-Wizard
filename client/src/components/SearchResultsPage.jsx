@@ -2,11 +2,21 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Card, Container, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useQuery, useLazyQuery } from '@apollo/client';
+import { GET_USER } from '../graphql/queries';
 
 function SearchResultsPage() {
   const location = useLocation();
   const { users = [], schedules = [] } = location.state || {};
+  const [getUserQuery, { loading, error, data }] = useLazyQuery(GET_USER, {
+    variables: { username: '' },
+  });
 
+const handleUserClick = (username) => {
+  getUserQuery({ variables: { username } });
+};
+
+  console.log(users)
   return (
     <Container>
       <h1>Search Results</h1>
@@ -20,7 +30,7 @@ function SearchResultsPage() {
               <Card key={user._id} className="mb-3">
                 <Card.Body>
                   <Card.Title>
-                    <Link to={`/profile/${user.username}`}>{user.username}</Link>
+                    <Link to={`/visitingprofile/${user._id}`} onClick={() => handleUserClick(user.username)}>{user.username}</Link>
                   </Card.Title>
                 </Card.Body>
               </Card>

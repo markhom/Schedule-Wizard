@@ -89,8 +89,8 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const resolvers = {
   Query: {
     users: async () => User.find(),
-    user: async (parent, { username }) => {
-      return User.findOne({ username }).populate({
+    user: async (parent, { userId }) => {
+      return User.findOne({ _id: userId }).populate({
         path: 'schedules',
         populate: {
           path: 'activities',
