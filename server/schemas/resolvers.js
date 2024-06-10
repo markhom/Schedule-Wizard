@@ -106,7 +106,7 @@ const resolvers = {
           },
         });
       }
-      throw new AuthenticationError('Not authenticated');
+      throw AuthenticationError
     },
     getSchedules: async () => Schedule.find(),
     getOneSchedule: async (parent, { scheduleId }) => {
@@ -139,11 +139,11 @@ const resolvers = {
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
       if (!user) {
-        throw new AuthenticationError('No user found with this email address');
+        throw AuthenticationError
       }
       const correctPw = await user.isCorrectPassword(password);
       if (!correctPw) {
-        throw new AuthenticationError('Incorrect credentials');
+        throw AuthenticationError
       }
       const token = signToken(user);
       return { token, user };
@@ -151,7 +151,7 @@ const resolvers = {
     addSchedule: async (parent, { title, activities }, context) => {
       if (!context.user) {
         console.error("Authentication error: User must be logged in to create schedules.");
-        throw new AuthenticationError("User must be authenticated to create schedules.");
+        throw AuthenticationError
       }
 
       try {
@@ -201,13 +201,16 @@ const resolvers = {
     },
     updateSchedule: async (parent, { scheduleId, title }, context) => {
       if (!context.user) {
-        throw new AuthenticationError('Not authenticated');
+        throw AuthenticationError
       }
-      return Schedule.findByIdAndUpdate(scheduleId, { title }, { new: true }).populate('activities');
+      return Schedule.findByIdAndUpdate(
+        scheduleId,
+        { $set: { title: title } },
+        { new: true });
     },
     deleteSchedule: async (parent, { scheduleId, userId }, context) => {
       if (!context.user) {
-        throw new AuthenticationError('Not authenticated');
+        throw AuthenticationError
       }
       const schedule = await Schedule.findByIdAndDelete(scheduleId);
       if (!schedule) {

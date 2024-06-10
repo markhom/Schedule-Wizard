@@ -25,7 +25,7 @@ const NavbarComponent = () => {
             {/* {isAuthenticated && user ? ( */}
             {Auth.loggedIn() ? (
               <>
-                <Nav.Link as={Link} to='/profile/:username'>Profile</Nav.Link>
+                <Nav.Link as={Link} to='/profile/'>Profile</Nav.Link>
                 <Nav.Link as={Link} to="/create-schedule">Create Schedule</Nav.Link>
                 <Nav.Link onClick={Auth.logout}>Logout</Nav.Link>
               </>

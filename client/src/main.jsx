@@ -14,6 +14,7 @@ import ScheduleDetail from './components/schedules/ScheduleDetail.jsx';
 import SearchResultsPage from './components/SearchResultsPage'; 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Update from './pages/Update.jsx';
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
         path: '/signup',
         element: <Signup />
       }, {
-        path: '/profile/:username',
+        path: '/profile',
         element: <Profile />
       }, {
         path: 'schedule',
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
         path: '/search',
         element: <SearchResultsPage />
 
+      },
+      {
+        path: '/update/:scheduleId',
+        element: <Update />
       },
       //Need to add in a page for GET_ONE_SCHEDULE below
       // {

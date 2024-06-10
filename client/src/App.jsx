@@ -42,7 +42,7 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      {/* <AuthProvider>  AuthProvider wraps all components that need auth state */}
+      
       <div className="flex-column justify-flex-start min-100-vh">
         <Header />
         <Navbar /> {/* Navbar can now use the context for authentication */}
@@ -55,7 +55,7 @@ function App() {
 
         <Footer />
       </div>
-      {/* </AuthProvider> */}
+
     </ApolloProvider>
   );
 }

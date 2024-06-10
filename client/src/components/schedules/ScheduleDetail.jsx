@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button} from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_ONE_SCHEDULE } from '../../graphql/queries';
