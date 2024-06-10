@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button} from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_ONE_SCHEDULE } from '../../graphql/queries';
+import { Container, Row, Col, Card } from 'react-bootstrap';
 
 function ScheduleDetail() {
   const { scheduleId } = useParams();
@@ -23,23 +23,33 @@ function ScheduleDetail() {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
-  console.log("Schedule data:", scheduleData);
-  console.log("Activities data:", activities);
-
   return (
-    <div>
-      <h1>Schedule Details</h1>
-      <h2>{scheduleData.title}</h2>
-      <ul>
-        {activities.map(activity => (
-          <li key={activity._id}>
-            <strong>{activity.day}</strong>: <strong>{activity.title}</strong> - From {formatTime(activity.startTime)} to {formatTime(activity.endTime)}
-            <p>{activity.description}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Container>
+      <Row className="mt-5">
+        <Col>
+          <Card border="success" style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+            <Card.Header className="text-center" style={{ backgroundColor: 'transparent', border: 'none' }}>
+              <h1 style={{ color: 'green' }}>Schedule Details</h1>
+            </Card.Header>
+            <Card.Body>
+              <h2 className="text-center mb-4" style={{ color: 'green' }}>{scheduleData.title}</h2>
+              <ul className="list-unstyled">
+                {activities.map(activity => (
+                  <li key={activity._id} className="mb-3">
+                    <h4 className="mb-1" style={{ color: 'green' }}>{activity.title}</h4>
+                    <p className="mb-0"><strong>Day:</strong> {activity.day}</p>
+                    <p className="mb-0"><strong>Time:</strong> {formatTime(activity.startTime)} - {formatTime(activity.endTime)}</p>
+                    <p className="mb-0"><strong>Description:</strong> {activity.description}</p>
+                  </li>
+                ))}
+              </ul>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
 export default ScheduleDetail;
+
