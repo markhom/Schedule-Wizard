@@ -22,7 +22,7 @@ const DonationButton = ({ itemID, ammount }) => {
       });
   };
   return (
-    <Button class="" className="animated-button" variant="primary" onClick={handleClick}>
+    <Button className="animated-button justify-content-end mb-3" variant="primary" onClick={handleClick}>
       Donate {ammount}$
     </Button>
   );

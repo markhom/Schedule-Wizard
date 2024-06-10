@@ -18,15 +18,17 @@ function Footer() {
     //     </footer>
     // );
     return (
-        <Container>
+        <Container fluid>
             <Row>
-                <div class="">
-                    <DonationButton ammount={"5.00"} itemID="price_1IUx1FJ2iOysJZvP1LD3EzTR" />
-                </div>
 
-                <Col >
-                <p class="text-center" > © 2024 ScheduleWizard. All rights reserved.</p>  
+                <Col xs={10} className="">
+                    <p class="text-center" > © 2024 ScheduleWizard. All rights reserved.</p>
                 </Col>
+
+                <Col xs={2}>
+                    <DonationButton ammount={"5.00"} itemID="price_1IUx1FJ2iOysJZvP1LD3EzTR" />
+                </Col>
+
             </Row>
         </Container>
     );
