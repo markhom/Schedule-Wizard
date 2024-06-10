@@ -5,7 +5,9 @@ import { Link } from 'react-router-dom';
 
 
 function AllSchedules() {
-    const { loading, error, data } = useQuery(GET_SCHEDULES);
+    const { loading, error, data } = useQuery(GET_SCHEDULES, {
+      pollInterval: 500
+    });
   
     if (loading) return <p>Loading schedules...</p>;
     if (error) return <p>Error loading schedules: {error.message}</p>;

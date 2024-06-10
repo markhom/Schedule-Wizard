@@ -1,33 +1,33 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import AuthService from './auth';
+// import React, { createContext, useContext, useState, useEffect } from 'react';
+// import AuthService from './auth';
 
-const AuthContext = createContext();
+// const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
+// export const useAuth = () => useContext(AuthContext);
 
-export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+// export const AuthProvider = ({ children }) => {
+//   const [isAuthenticated, setIsAuthenticated] = useState(false);
+//   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const token = AuthService.getToken();
-    if (token) {
-      const decoded = AuthService.getProfile();
-      setUser(decoded.data);
-      setIsAuthenticated(true);
-    }
-  }, []);
+//   useEffect(() => {
+//     const token = AuthService.getToken();
+//     if (token) {
+//       const decoded = AuthService.getProfile();
+//       setUser(decoded.data);
+//       setIsAuthenticated(true);
+//     }
+//   }, []);
 
-  const logout = () => {
-    AuthService.logout();
-    setUser(null);
-    setIsAuthenticated(false);
-  };
+//   const logout = () => {
+//     AuthService.logout();
+//     setUser(null);
+//     setIsAuthenticated(false);
+//   };
 
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, user, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
+//   return (
+//     <AuthContext.Provider value={{ isAuthenticated, user, logout }}>
+//       {children}
+//     </AuthContext.Provider>
+//   );
+// };

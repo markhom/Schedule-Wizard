@@ -97,7 +97,6 @@ const resolvers = {
         },
       });
     },
-
     me: async (parent, args, context) => {
       if (context.user) {
         return User.findOne({ _id: context.user._id }).populate({
@@ -107,59 +106,36 @@ const resolvers = {
           },
         });
       }
-      throw AuthenticationError;
+      throw new AuthenticationError('Not authenticated');
     },
-    //Note: don't need below because calling users will return schedules
-    // userSchedules: async (parent, { userId }) => {
-    //   return Schedule.find({ owner: userId });
-    // },
-
     getSchedules: async () => Schedule.find(),
-    
-    getOneSchedule: async (parent, { scheduleId }, context) => {
-      console.log("Fetching schedule with ID:", scheduleId); // Log incoming schedule ID
-      try {
-        const schedule = await Schedule.findById(scheduleId);
-        console.log("Found schedule:", schedule); // Log the result of the query
-        return schedule;
-      } catch (error) {
-        console.error("Error fetching schedule:", error); // Log if there's an error
-        throw new Error("Failed to fetch schedule.");
-      }
-    }
+    getOneSchedule: async (parent, { scheduleId }) => {
+      return Schedule.findById(scheduleId).populate('activities');
+    },
+    searchUsers: async (_, { term }) => {
+      return User.find({
+        $or: [
+          { username: { $regex: new RegExp(term, 'i') } },
+          { email: { $regex: new RegExp(term, 'i') } },
+        ],
+      });
+    },
+    searchSchedules: async (_, { term }) => {
+      return Schedule.find({
+        title: { $regex: new RegExp(term, 'i') },
+      }).populate('activities');
+    },
   },
-  // thought: async (parent, { thoughtId }) => {
-  //   return Thought.findOne({ _id: thoughtId });
-  // },
-  //Below are the mutations
   Mutation: {
     addUser: async (parent, { username, email, password }) => {
-        // Check if the user already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            throw new Error('A user with this email already exists.');
-        }
-      
-        try {
-            const user = await User.create({ username, email, password });
-            const token = signToken(user);
-            return { token, user };
-        } catch (error) {
-            // Log the complete error object and specific details to help diagnose the problem
-            console.error('Error creating user:', error.message);
-            console.error('Error stack:', error.stack); // Provides a stack trace
-
-            // Optionally, log the input data to understand context (be careful with sensitive data like passwords)
-            console.error('Attempted user creation with email:', email);
-            // Do not log passwords in production environments, it's shown here for debugging purposes only
-            console.error('Attempted user creation with password:', password);
-
-            throw new Error('Failed to create user. Please check the provided data.');
-        }
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        throw new Error('A user with this email already exists.');
+      }
+      const user = await User.create({ username, email, password });
+      const token = signToken(user);
+      return { token, user };
     },
-
-    //Below, note to self: putting 'new' in front of AuthenticationError caused
-    //an error in another spot. Test and see if it needs to be taken out here too
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
       if (!user) {
@@ -172,49 +148,98 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
+    addSchedule: async (parent, { title, activities }, context) => {
+      if (!context.user) {
+        console.error("Authentication error: User must be logged in to create schedules.");
+        throw new AuthenticationError("User must be authenticated to create schedules.");
+      }
 
-    addSchedule: async (parent, { title }, context) => {
-      if (context.user) {
-        const schedule = await Schedule.create({
-          title: title,
-          //Will Activities need to go here?
-        })
-        const updatedUser = await User.findOneAndUpdate(
-          { _id: context.user._id },
+      try {
+        console.log("Creating new schedule with title:", title);
+        const schedule = await Schedule.create({ title });
+        console.log("Schedule created with ID:", schedule._id);
+
+        if (activities && activities.length > 0) {
+          console.log("Inserting activities:", activities);
+          const activityDocs = await Activity.insertMany(
+            activities.map(activity => ({
+              ...activity,
+              startTime: new Date(activity.startTime), // Ensure date is correctly parsed
+              endTime: new Date(activity.endTime), // Ensure date is correctly parsed
+              schedule: schedule._id
+            }))
+          );
+
+          if (activityDocs.length) {
+            const activityIds = activityDocs.map(doc => doc._id);
+            console.log("Activities created with IDs:", activityIds);
+            await Schedule.findByIdAndUpdate(schedule._id, { $set: { activities: activityIds } });
+            console.log("Schedule updated with activity IDs:", schedule._id);
+          } else {
+            console.log("No activities were created, check input data and model constraints.");
+          }
+        } else {
+          console.log("No activities provided to insert.");
+        }
+
+        console.log("Linking schedule to user:", context.user._id);
+        await User.findByIdAndUpdate(
+          context.user._id,
           { $push: { schedules: schedule._id } },
           { new: true }
         );
-        return updatedUser
-      }
-      throw AuthenticationError;
-    },
 
-    updateSchedule: async (parent, { scheduleId, title }, context ) => {
-      const schedule = Schedule.findOneAndUpdate(
-        { _id: context.schedule._id},
-        { $push: { schedules: schedule._id } },
-        { new: true },
-      )
+        console.log("Fetching the complete schedule to return.");
+        const populatedSchedule = await Schedule.findById(schedule._id).populate('activities');
+        console.log("Returning populated schedule:", populatedSchedule);
+
+        return populatedSchedule;
+      } catch (error) {
+        console.error("Error creating schedule:", error);
+        throw new Error("Failed to create schedule due to an error.");
+      }
+    },
+    updateSchedule: async (parent, { scheduleId, title }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('Not authenticated');
+      }
+      return Schedule.findByIdAndUpdate(scheduleId, { title }, { new: true }).populate('activities');
+    },
+    deleteSchedule: async (parent, { scheduleId, userId }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('Not authenticated');
+      }
+      const schedule = await Schedule.findByIdAndDelete(scheduleId);
       if (!schedule) {
-        throw AuthenticationError;
+        throw new Error('Schedule not found');
       }
+      await User.findByIdAndUpdate(
+        userId,
+        { $pull: { schedules: schedule._id } },
+        { new: true }
+      );
+      const user = await User.findById(userId).populate('schedules');
+      return user;
     },
-
-    deleteSchedule: async (parent, { scheduleId }, context ) => {
-      if (context.user) {
-        const schedule = await Schedule.findByIdAndRemove({ //should this be findOneAndDelete?
-          _id: scheduleId,
-          //Anything else here?
-        });
-        await User.findOneAndUpdate(
-          { _id: context.user._id },
-          { $pull: { schedules: schedule._id } }
-        );
-
-        return schedule;
-      }
-      throw AuthenticationError;
-    } 
+    addActivity: async (parent, { scheduleId, activityData }) => {
+      const activity = await Activity.create(activityData);
+      return Schedule.findByIdAndUpdate(
+        scheduleId,
+        { $push: { activities: activity._id } },
+        { new: true }
+      );
+    },
+    removeActivity: async (parent, { activityId }) => {
+      const activity = await Activity.findByIdAndDelete(activityId);
+      return Schedule.findOneAndUpdate(
+        { activities: activityId },
+        { $pull: { activities: activityId } },
+        { new: true }
+      ).populate('activities');
+    },
+    updateActivity: async (parent, { activityId, startTime, endTime }) => {
+      return Activity.findByIdAndUpdate(activityId, { startTime, endTime }, { new: true });
+    },
   },
 };
 
