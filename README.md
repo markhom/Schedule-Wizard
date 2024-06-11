@@ -42,3 +42,6 @@ GitHub Profile: [mhayes0022] (https://github.com/mhayes0022)
 GitHub Profile: [AdelinM1] (https://github.com/AdelinM1)
 
 For additional questions, contact me via email: marcusjorgensen@gmail.com
+
+
+![ScheduleWizard](ScheduleWizard.png)
