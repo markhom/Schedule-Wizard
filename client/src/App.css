@@ -63,3 +63,20 @@ input, button {
   height: 100vh;
   width: 100%;
 }
+
+.min-100-vh {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; 
+}
+
+.main-content {
+  flex: 1; 
+}
+
