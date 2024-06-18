@@ -23,19 +23,13 @@ function AddScheduleForm({ user }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!user || !user._id) {
-      console.error('User is not defined or does not have an _id');
-      alert('User is not defined. Please log in.');
-      return;
-    }
-
+    console.log("Submitting with activities:", activities);
     const formattedActivities = activities.flat().filter(activity => activity.title && activity.startTime && activity.endTime).map(activity => ({
       ...activity,
       startTime: parseTime(activity.startTime),
       endTime: parseTime(activity.endTime)
     }));
-    
-    console.log("Formatted activities being submitted:", formattedActivities);
+    console.log("Formatted activities for submission:", formattedActivities);
 
     try {
       const { data } = await addSchedule({
@@ -44,9 +38,9 @@ function AddScheduleForm({ user }) {
           activities: formattedActivities,
         },
       });
-      console.log('Schedule created successfully:', data);
       document.location.replace('/');
-      
+
+
       // Reset activities
       setTitle('');
       setActivities(Array.from({ length: 7 }, () => Array(17).fill({ title: '', startTime: '', endTime: '', description: '', day: '' })));
@@ -64,13 +58,14 @@ function AddScheduleForm({ user }) {
 
   const parseTime = (timeString) => {
     const [hours, minutes] = timeString.split(':').map(Number);
-    const now = new Date();
-    now.setHours(hours);
-    now.setMinutes(minutes);
-    now.setSeconds(0);
-    now.setMilliseconds(0);
-    console.log("Parsed time:", now); // Debug statement
-    return now.toISOString();
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0); // This sets the time according to local timezone
+  
+    console.log("Time input string:", timeString);
+    console.log("Local time set:", date);
+    console.log("UTC time to be sent:", date.toISOString());
+  
+    return date.toISOString(); // sending the time in UTC
   };
 
   const handleActivityChange = (dayIndex, hourIndex, field, value) => {
