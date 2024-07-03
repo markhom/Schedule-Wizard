@@ -14,15 +14,25 @@ function ScheduleDetail() {
   if (error) return <div>Error loading schedule details: {error.message}</div>;
   if (!data || !data.getOneSchedule) return <div>No schedule found.</div>;
 
+  console.log('Schedule Data:', data.getOneSchedule);  // Log the received data
+
   const scheduleData = data.getOneSchedule;
   const activities = scheduleData.activities || [];
 
   const formatTime = (timestamp) => {
-    const date = new Date(parseInt(timestamp) * 1000);
-    console.log("Formatted time:", date); // Debug statement
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    if (!timestamp) {
+      return 'Time not set';
+    }
+  
+    // Convert the timestamp string to a number
+    const date = new Date(Number(timestamp));
+    if (isNaN(date.getTime())) {
+      return 'Invalid time';  // Check if the date object is valid
+    }
+  
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
   };
-
+  
   return (
     <Container>
       <Row className="mt-5">

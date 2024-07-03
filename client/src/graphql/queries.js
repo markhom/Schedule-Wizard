@@ -102,6 +102,7 @@ query getOneSchedule($scheduleId: ID!) {
       startTime
       endTime
       description
+      day
     }
   }
 }

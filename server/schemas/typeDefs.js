@@ -47,13 +47,20 @@ const typeDefs = `
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-    addSchedule(title: String!, activities: [ActivityInput]): Schedule  
-    updateSchedule(scheduleId: ID!, title: String!): Schedule  
-    deleteSchedule(scheduleId: ID!, userId: ID!): User 
-    addActivity(scheduleId: ID, activityData: ActivityInput): Schedule
-    removeActivity(activityId: ID): Schedule
-    updateActivity(activityId: ID, startTime: String, endTime: String): Activity
+    addSchedule(title: String!, activities: [ActivityInput]): Schedule
+    updateSchedule(scheduleId: ID!, title: String!): Schedule
+    deleteSchedule(scheduleId: ID!): Schedule
+    addActivity(scheduleId: ID!, activityData: ActivityInput!): Schedule
+    removeActivity(activityId: ID!): Schedule
+    updateActivity(activityId: ID!, title: String, description: String, startTime: String, endTime: String, day: String): Activity
   }
-`;
-
+  
+  input ActivityInput {
+    title: String!
+    description: String
+    startTime: String
+    endTime: String
+    day: String!
+  }
+`;  
 module.exports = typeDefs;
