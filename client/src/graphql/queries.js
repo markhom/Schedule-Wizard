@@ -47,10 +47,9 @@ query User($username: String!) {
 `;
 
 //Query to fetch user data for the owner of the acccount
-
 export const ME = gql`
-query Me {
-  me {
+query Me($sortBy: SortBy, $sortOrder: SortOrder) {
+  me(sortBy: $sortBy, sortOrder: $sortOrder) {
     _id
     email
     username
@@ -59,10 +58,10 @@ query Me {
       title
       activities {
         _id
-        description
-        endTime
-        startTime
         title
+        description
+        startTime
+        endTime
         day
       }
     }
@@ -70,11 +69,12 @@ query Me {
 }
 `;
 
+
 // Query to fetch all schedules
 
 export const GET_SCHEDULES = gql`
-query GetSchedules {
-  getSchedules {
+query GetSchedules($sortBy: SortBy, $sortOrder: SortOrder) {
+  getSchedules(sortBy: $sortBy, sortOrder: $sortOrder) {
     _id
     title
     activities {
@@ -85,31 +85,61 @@ query GetSchedules {
       title
       day
     }
+    ratings {
+      user {
+        _id
+        username
+      }
+      rating
+      createdAt
+    }
+    comments {
+      user {
+        _id
+        username
+      }
+      comment
+      createdAt
+    }
+    createdAt
+    updatedAt
   }
 }
 `;
-
-//Below is to fetch a single schedule by id
 
 export const GET_ONE_SCHEDULE = gql`
-query getOneSchedule($scheduleId: ID!) {
-  getOneSchedule(scheduleId: $scheduleId) {
-    _id
-    title
-    activities {
+  query getOneSchedule($scheduleId: ID!) {
+    getOneSchedule(scheduleId: $scheduleId) {
       _id
       title
-      startTime
-      endTime
-      description
-      day
+      activities {
+        _id
+        title
+        startTime
+        endTime
+        description
+        day
+      }
+      ratings {
+        user {
+          _id
+          username
+        }
+        rating
+        createdAt
+      }
+      comments {
+        user {
+          _id
+          username
+        }
+        comment
+        createdAt
+      }
     }
   }
-}
-`;
+`
 
-
-//Query for searching users
 export const SEARCH_USERS = gql`
   query SearchUsers($term: String!) {
     searchUsers(term: $term) {
@@ -140,4 +170,23 @@ query SearchSchedules($term: String!) {
     }
   }
 }
+`;
+
+
+// Query to fetch rated schedules
+export const GET_RATED_SCHEDULES = gql`
+  query GetRatedSchedules($sortBy: SortBy, $sortOrder: SortOrder) {
+    getRatedSchedules(sortBy: $sortBy, sortOrder: $sortOrder) {
+      schedule {
+        _id
+        title
+        createdAt
+        activities {
+          _id
+          title
+        }
+      }
+      rating
+    }
+  }
 `;

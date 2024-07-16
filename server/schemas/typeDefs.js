@@ -3,13 +3,19 @@ const typeDefs = `
     _id: ID
     username: String
     email: String
-    schedules: [Schedule]
+    schedules(sortBy: SortBy, sortOrder: SortOrder): [Schedule]
   }
 
   type Schedule {
     _id: ID
     title: String
     activities: [Activity]
+    ratings: [Rating]
+    comments: [Comment]
+    createdAt: String
+    updatedAt: String
+    ratingCount: Int
+    averageRating: Float
   }
 
   type Activity {
@@ -19,6 +25,19 @@ const typeDefs = `
     endTime: String
     description: String
     day: String
+  }
+
+  type Rating {
+    _id: ID
+    user: User
+    rating: Int
+    createdAt: String
+  }
+
+  type Comment {
+    user: User
+    comment: String
+    createdAt: String
   }
 
   input ActivityInput {
@@ -34,14 +53,33 @@ const typeDefs = `
     user: User
   }
 
+  type RatedSchedule {
+    schedule: Schedule!
+    rating: Int!
+  }
+
+  enum SortBy {
+    CREATED_AT
+    UPDATED_AT
+    TITLE
+    RATING
+  }
+
+  enum SortOrder {
+    ASC
+    DESC
+  }
+
   type Query {
     users: [User]
     user(username: String!): User
-    me: User
-    getSchedules: [Schedule]
+    me(sortBy: SortBy, sortOrder: SortOrder): User
+    getSchedules(sortBy: SortBy, sortOrder: SortOrder): [Schedule]
     getOneSchedule(scheduleId: ID!): Schedule
     searchUsers(term: String!): [User]
-    searchSchedules(term: String!): [Schedule]
+    searchSchedules(term: String!, sortBy: SortBy, sortOrder: SortOrder): [Schedule]
+    checkUserRating(scheduleId: ID!): Rating
+    getRatedSchedules(sortBy: SortBy, sortOrder: SortOrder): [RatedSchedule]
   }
 
   type Mutation {
@@ -53,14 +91,9 @@ const typeDefs = `
     addActivity(scheduleId: ID!, activityData: ActivityInput!): Schedule
     removeActivity(activityId: ID!): Schedule
     updateActivity(activityId: ID!, title: String, description: String, startTime: String, endTime: String, day: String): Activity
+    addRating(scheduleId: ID!, rating: Int!): Schedule
+    addComment(scheduleId: ID!, comment: String!): Schedule
   }
-  
-  input ActivityInput {
-    title: String!
-    description: String
-    startTime: String
-    endTime: String
-    day: String!
-  }
-`;  
+`;
+
 module.exports = typeDefs;

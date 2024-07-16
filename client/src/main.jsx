@@ -6,15 +6,16 @@ import Home from './pages/Home';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
+import RatedSchedules from './pages/RatedSchedules';
 import ErrorPage from './pages/ErrorPage';
 import CheckoutForm from './pages/CheckoutForm';
 import Schedule from './components/schedules/Schedule.jsx';
 import ScheduleCreationPage from './components/schedules/ScheduleCreationPage.jsx';
 import ScheduleDetail from './components/schedules/ScheduleDetail.jsx';
 import SearchResultsPage from './components/SearchResultsPage'; 
+import Update from './pages/Update.jsx';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Update from './pages/Update.jsx';
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,9 @@ const router = createBrowserRouter([
         path: '/profile',
         element: <Profile />
       }, {
+        path: '/rated-schedules',
+        element: <RatedSchedules />
+      }, {
         path: 'schedule',
         element: <Schedule />
       },
@@ -49,7 +53,6 @@ const router = createBrowserRouter([
       {
         path: '/search',
         element: <SearchResultsPage />
-
       },
       {
         path: '/update/:scheduleId',
@@ -59,11 +62,6 @@ const router = createBrowserRouter([
         path: 'profile/:username',
         element: <Profile />
       }
-      //Need to add in a page for GET_ONE_SCHEDULE below
-      // {
-      //   path: '',
-      //   element: <></>
-      // },
     ]
   },
 ]);
@@ -71,3 +69,5 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
   <RouterProvider router={router} />
 );
+
+

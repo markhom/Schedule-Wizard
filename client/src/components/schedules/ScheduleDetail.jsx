@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_ONE_SCHEDULE } from '../../graphql/queries';
 import { Container, Row, Col, Card } from 'react-bootstrap';
+import RatingForm from './RatingForm';  // Make sure this path is correct
 
 function ScheduleDetail() {
   const { scheduleId } = useParams();
@@ -14,8 +15,6 @@ function ScheduleDetail() {
   if (error) return <div>Error loading schedule details: {error.message}</div>;
   if (!data || !data.getOneSchedule) return <div>No schedule found.</div>;
 
-  console.log('Schedule Data:', data.getOneSchedule);  // Log the received data
-
   const scheduleData = data.getOneSchedule;
   const activities = scheduleData.activities || [];
 
@@ -23,16 +22,10 @@ function ScheduleDetail() {
     if (!timestamp) {
       return 'Time not set';
     }
-  
-    // Convert the timestamp string to a number
     const date = new Date(Number(timestamp));
-    if (isNaN(date.getTime())) {
-      return 'Invalid time';  // Check if the date object is valid
-    }
-  
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
   };
-  
+
   return (
     <Container>
       <Row className="mt-5">
@@ -43,6 +36,8 @@ function ScheduleDetail() {
             </Card.Header>
             <Card.Body>
               <h2 className="text-center mb-4" style={{ color: 'green' }}>{scheduleData.title}</h2>
+              {/* Place RatingForm here */}
+              <RatingForm scheduleId={scheduleId} />
               <ul className="list-unstyled">
                 {activities.map(activity => (
                   <li key={activity._id} className="mb-3">
@@ -62,4 +57,3 @@ function ScheduleDetail() {
 }
 
 export default ScheduleDetail;
-

@@ -131,9 +131,54 @@ mutation UpdateActivity($activityId: ID!, $title: String, $description: String, 
     description
     day
   }
-}
+}`
+
+export const ADD_RATING = gql`
+  mutation AddRating($scheduleId: ID!, $rating: Int!) {
+    addRating(scheduleId: $scheduleId, rating: $rating) {
+      _id
+      title
+      ratings {
+        user {
+          _id
+          username
+        }
+        rating
+        createdAt
+      }
+    }
+  }
 `;
 
+// Mutation to add a comment to a schedule
+export const ADD_COMMENT = gql`
+  mutation AddComment($scheduleId: ID!, $comment: String!) {
+    addComment(scheduleId: $scheduleId, comment: $comment) {
+      _id
+      title
+      comments {
+        user {
+          _id
+          username
+        }
+        comment
+        createdAt
+      }
+    }
+  }
+`;
 
-
-
+// Query to check user rating
+export const CHECK_USER_RATING = gql`
+  query CheckUserRating($scheduleId: ID!) {
+    checkUserRating(scheduleId: $scheduleId) {
+      _id
+      rating
+      createdAt
+      user {
+        _id
+        username
+      }
+    }
+  }
+`;
